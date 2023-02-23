@@ -103,7 +103,7 @@ predictions |>
         colour = "Phonological similarity (1 / Levenshtein)",
         fill = "Phonological similarity (1 / Levenshtein)",
         subtitle = glue("**Phonological similarity (cognateness)**: <span style = 'color:{clrs[1]};'>100% similarity</span> <span style = 'color:{clrs[4]};'>50% similarity</span> <span style = 'color:{clrs[5]};'>0% similarity</span>"),
-        caption = "*Individual (think lines) and median (thick lines) posterior predictions from the Bayesian IRT model*.") +
+        caption = "*Individual (thin lines) and median (thick lines) posterior predictions from the Bayesian IRT model*.") +
     scale_colour_manual(values = clrs[c(5, 4, 1)]) +
     scale_fill_manual(values = clrs[c(5, 4, 1)]) +
     scale_y_continuous(
