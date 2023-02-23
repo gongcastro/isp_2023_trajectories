@@ -7,7 +7,7 @@ format:
     reference-doc: ../assets/template.docx
 warning: false
 echo: false
-fig-dpi: 1000
+fig-dpi: 2000
 ---
 
 ```{r}
