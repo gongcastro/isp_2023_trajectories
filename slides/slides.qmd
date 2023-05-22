@@ -1,273 +1,858 @@
 ---
 title: Cognateness, frequency, and vocabulary size
 subtitle: An interactive account of bilingual lexical acquisition
+footer: |
+    International Symposium of Psycholinguistics | Vitoria, 31st May, 2023
 format:
-  clean-revealjs:
-    self-contained: true
+  revealjs:
+    show-slide-number: all
+    theme: assets/style.scss
+    css: assets/style.css
+    logo: images/logo-upf.png
+    transition: slide
+    background-transition: fade
+    transition-speed: fast
+    embed-resources: true
+    header-includes: |
+      <link rel="stylesheet" href="/assets/fontawesome-free-6.1.1-web/css/font-awesome.min.css">
+      <script defer src="/assets/fontawesome-free-6.1.1-web/js/all.min.js"></script>
+  beamer: default
 author:
-  - name: Gonzalo Garcia-Castro
+  - name: "Gonzalo Garcia-Castro<sup>1</sup>"
     orcid: 0000-0002-8553-4209
-    email: gongarciacastro@gmail.com
-    affiliations: Universitat Pompeu Fabra
-  - name: Daniela S. Ávila-Varela
+  - name: "Daniela S. Ávila-Varela<sup>2</sup>"
     orcid: 0000-0002-3518-8117
-    affiliations: Universidade de Lisboa
-  - name: Ignacio Castillejo
+  - name: "Ignacio Castillejo<sup>3</sup>"
     orcid: 0000-0001-7445-0416
-    affiliations: Universidad Autónoma de Madrid
-  - name: Núria Sebastian-Galles
+  - name: "Núria Sebastian-Galles<sup>1</sup>"
     orcid: 0000-0001-6938-2498
-    affiliations: Universitat Pompeu Fabra
-date: "May 31st, 2023"
-bibliography: refs.bib
+bibliography: ../assets/references.bib
+echo: false
+warning: false
 ---
 
-## Example slide
+```{r setup}
+#| label: setup
+#| echo: false
+#| warning: false
+#| message: false
+library(here)
+library(tidyverse)
+library(patchwork)
+library(ggraph)
+library(tidygraph)
+library(distributional)
+library(ggdist)
+library(gt)
 
-### This is a subtitle
+set.seed(888)
 
-Before we dive a bit deeper, here is a simple example of the
-[clean theme](https://github.com/grantmcdermott/quarto-revealjs-clean)
-in action. 
+theme_set(theme_ggdist())
 
-- No pictures or anything fancy. Just text for the moment.
+file_paths <- list.files(here::here("R"), pattern = ".R$", full.names = TRUE)
+invisible(lapply(file_paths, source))
 
-Next, we'll take a brief tour of some theme components.
+items <- readRDS(here("data", "items.rds"))
+participants <- readRDS(here("data", "participants.rds"))
+responses <- readRDS(here("data", "responses.rds"))
+fit <- readRDS(here("results", "fits", "fit.rds"))
+post_draws <- readRDS(here("results", "posterior", "posterior_draws.rds"))
+post_preds <- readRDS(here("results", "predictions", "predictions.rds"))
+post_summary <- readRDS(here("results", "posterior", "post_summary.rds"))
 
-- We'll use the same basic
-structure as the
-[original LaTeX slides](https://raw.githack.com/kylebutts/templates/master/latex-slides/auxiliary/slides.pdf).
-- Note that the [_full suite_](https://quarto.org/docs/presentations/revealjs/)
-of Reveal.js features are available for this Quarto implementation,
-even if we don't cover everything here.
-
-
-## Before you proceed...
-
-### Requirements for the coding examples in this demo
-
-:::{.callout-note}
-## R libraries
-
-While the clean theme is language agnostic, we will use several R coding
-examples in this demo to highlight some advanced theme features.
-
-You will need the following libraries if you'd like to render the template
-"as-is":
-
-```{.r}
-install.packages(c("modelsummary", "gt", "fixest", "pdftools", "tinytex", "threejs"))
 ```
+
+
+## Bilingual word acquisition
+
+Learning words is very important
+
+Learning a word involves the association between a linguistic form to its referent(s) (very complex)
+
+Bilinguals face the challenge of learning more than one word-form per referent
+
+We still don't know much about how bilingualism impacts word learning
+
+## Learning outputs: measuring vocabulary size
+
+<br>
+
+**Vocabulary checklist**: number/proportion of words checked by caregivers as `Understands`, and/or `Says`
+
+<br>
+
+English-Spanish bilinguals have **smaller English vocabulary sizes**, compared to monolinguals, but **similar vocabulary sizes when both language are summer together** [@hoff2012dual]
+
+## Linguistic distance
+
+<br>
+
+Bilingual toddlers learning two typologically close languages showed larger vocabulary sizes [@floccia2018introduction]
+
+::: goal
+
+**Cognate**: form-similar translation equivalents
+
+| *Cognate*           | *Non-cognate*       |
+|:-------------------:|:-------------------:|
+| [cat] /ˈgat-ˈgato/  | [dog] /ˈgos-ˈpe.ro/ |
+
+:::
+
+Cognateness facilitates vocabulary growth: **mechanisms?**
+
+
+## Parallel activation: candidate mechanism?
+
+::: columns
+
+:::: {.column width="50%"}
+
+::: goal
+
+Lexical access is **language non-selective**:
+
+Translation equivalents are co-activated
+Even in monolingual situations
+
 :::
 
 
-:::{.callout-note}
-## TinyTex
-
-While Revealjs presentations are HTML format, we will show an example of how to 
-embed LaTeX tables as images. This requires a working Tex distribution, of which
-TinyTex provides by far the easiest and lightest integration with Quarto. More
-details [here](https://quarto.org/docs/output-formats/pdf-engine.html).
-
-```{.bash}
-quarto install tinytex
+```{r parallel}
+#| label: parallel
+#| echo: false
+#| warning: false
+#| fig-width: 5
+#| fig-height: 2
+#| out-width: 100%
+#| out-height: 100%
+tibble(x = c(-1, 1),
+       y = c(0, 0),
+       language = c("L1", "L2")) |> 
+    ggplot(aes(x, y,
+               label = language,
+               fill = language,
+               colour = language)) +
+    annotate(geom = "segment",
+             x = -1,
+             xend = 1,
+             y = 0,
+             yend = 0,
+             colour = "grey",
+             size = 2) +
+    geom_point(size = 50,
+               shape = 21,
+               stroke = 3) +
+    geom_text(colour = "black",
+              size = 7) +
+    annotate(geom = "text",
+             label = "Phonology",
+             x = 0,
+             y = 0.1,
+             hjust = 0.5,
+             vjust = 0,
+             size = 6) +
+    scale_fill_manual(values = c("#fc9c95", "#66d6d9")) +
+    scale_x_continuous(limits = c(-1.5, 1.5)) +
+    scale_y_continuous(limits = c(-1 , 1)) +
+    theme_void() +
+    theme(legend.position = "none")
 ```
-:::
+::::
 
-# Components {background-color="#40666e"}
+:::: {.column width="50%"}
 
-## Components
+Cognates are acquired earlier than non-cognates [@mitchell2022cognates]
 
-### Ordered and Unordered Lists
-
-Here we have an unordered list.
-
-- first item
-    - sub-item
-- second item
-
-And next we have an ordered one.
-
-1. first item
-    i) sub-item
-2. second item
-
-## Components
-
-### Alerts & Cross-refs {#sec-crossref}
-
-To emphasize specific words or text, you can:
-
-- Use the default `.alert` class, e.g. [important note]{.alert}.
-- Use the `.fg` class for custom colour, e.g. [important note]{.fg style="--col: #e64173"}.
-- Use the `.bg` class for custom background, e.g. [important note]{.bg style="--col: #e64173"}.
-
-To cross-reference, you have several options.
-
-- Beamer-like `.button` class provided by this theme, e.g. [[Appendix]{.button}](#sec-appendix)
-- Quarto's native cross-ref syntax, e.g., "See @sec-appendix."
-- Hyperlink manually, e.g. "See the [Appendix](#sec-appendix)."
-
-
-## Components
-
-### Citations
-
-Citations follow the standard
-[Quarto format](https://quarto.org/docs/authoring/footnotes-and-citations.html#citations)
-and be sourced from BibLaTex, BibTeX, or CLS files. For example:
-
- - [Topic 1:]{.alert} Spatial Frictions [@Fajgelbaum_Morales_Serrato_Zidar_2018; @Hsieh_Moretti_2019; @Moretti_2011]
-
-- [Topic 2:]{.alert} Blah [@Suárez_Serrato_Zidar_2016]
-
-## Components
-
-### Blocks
-
-Quarto provides
-[dedicated environments](https://quarto.org/docs/authoring/cross-references.html#theorems-and-proofs)
-for theorems, lemmas, and so forth. 
-
-But in presentation format, it's arguably more effective just to use a
-[Callout Block](https://quarto.org/docs/authoring/callouts.html).
-
-:::{.callout-note}
-## Regression Specification
-
-The main specification is as follows:
-
-$$
-y_{it} = X_{it} \beta + \mu_i + \varepsilon_{it}
-$$
-:::
-
-## Components
-
-### Multicolumn I: Text only
-
-:::: {.columns}
-
-::: {.column width="50%"}
-#### Column 1
-
-Here is a long sentence that will wrap onto the next line as it hits the column
-width, and continuing on this way until it stops.
-:::
-
-::: {.column width="50%"}
-#### Column 2
-
-Some other text in another column.
-
-A second paragraph.
-:::
+Dissociation between models of bilingual word processing (parallel activation) and word acquisition
 
 ::::
 
-Multicolumn support is very flexible and we can continue with a single full
-span column in the same slide.
-
-## Components
-
-### Multicolumn II: Text and figures
-
-:::: {.columns}
-
-::: {.column width="50%"}
-![](images/kanagawa.jpg)
-:::
-
-::: {.column width="50%"}
-
-- A point about the figure that is potentially important.
-- Another point about the figure that is also potentially important.
-:::
 
 ::::
 
-Note that sub- and multi-panel figures are also natively supported by Quarto.
-See [here](https://quarto.org/docs/authoring/figures.html#subfigures).
+:::
 
-## Components
+## An accumulator model of word acquisition
 
-### Multicolumn III: Code and output
+![](images/accumulator-diagram.png){width=14in, fig-align:center}
 
-```{r}
-#| echo: true
-#| label: fig-pairs
-#| fig-cap: "Pairwise scatterplot" 
-#| fig-asp: 1
-#| output-location: column
+## An accumulator model of word acquisition
 
-palette("Classic Tableau")
+<br>
 
-par(
-  family = "HersheySans",
-  las = 1, pch = 19, cex = 1.5
-)
+For participant **$i$** and word **$j$**:
 
-pairs(
-  iris[,1:4],
-  col=iris$Species
-)
+::: info-box
+
+$$
+\begin{aligned}
+\text{Learning instances}_{ij} &= \text{Age}_i \cdot \text{Frequency}_j \\
+\text{Frequency}_j &\sim \text{Poisson}(\lambda)
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+\text{Age of acquisition}_{ij} &= min(\text{Threshold}_{ij}-\text{Learning instances}_{ij}) 
+\end{aligned}
+$$
+
+:::
+
+::: columns
+
+:::: {.column width="50%"}
+
+We fix some parameters:
+
+$$
+\begin{aligned}
+\text{Threshold} &= 250 \\
+\lambda &= 1
+\end{aligned}
+$$
+
+::::
+
+:::: {.column width="50%"}
+
+```{r poisson-1}
+#| label: poisson-1
+#| out-width: 50%
+data.frame(lambda = 50) %>%
+    ggplot(aes(xdist = dist_poisson(lambda))) +
+    stat_histinterval(point_interval = NULL,
+                      slab_colour = "white",
+                      outline_bars = TRUE) +
+    coord_cartesian(expand = FALSE) +
+    labs(
+        title = "Poisson distribution",
+        x = NULL,
+        y = NULL
+    ) +
+    theme_ggdist()
 ```
 
-# Tables {background-color="#40666e"}
+::::
 
-## Tables
+:::
 
-### Regression example
 
-Quarto offers excellent
-[table support](https://quarto.org/docs/authoring/tables.html),
-with further customization via user libraries. Let's illustrate with a
-regression example:
+## Simulating word acquisition
 
-```{r}
-#| echo: true
+### Catalan monolingual (no parallel activation)
 
-library(fixest)
+::: columns
 
-mods = feols(
-  rating ~ complaints + privileges + learning + csw0(raises + critical) + advance,
-  data = attitude
-)
+:::: {.column width="50%"}
 
-dict = c("rating"     = "Overall Rating",
-         "complaints" = "Handling of Complaints",
-         "privileges" = "No Special Priviledges",
-         "learning"   = "Opportunity to Learn",
-         "raises"     = "Performance-Based Raises",
-         "critical"   = "Too Critical",
-         "advance"    = "Advancement")
+| Catalan | Spanish |
+|:-------:|:-------:|
+| 100%    | 0%      |
+
+::::
+
+:::: {.column width="50%"}
+
+::::: info-box
+
+$$
+\text{Threshold} = 300 \\
+\text{Frequency}_{j} \sim \text{Poisson}(\lambda) \\
+\lambda = 50
+$$
+
+:::::
+
+::::
+
+:::
+
+```{r eli}
+#| label: eli-monolingual
+#| fig-width: 7
+#| fig-height: 3.25
+#| out-width: 150%
+#| out-height: 100%
+#| fig-align: center
+threshold <- 300
+eli_df <- generate_eli(threshold = threshold,
+                       age = seq(1, 50, length.out = 100),
+                       freq_month = 50,
+                       freq_beta = 1,
+                       l1_doe = 1,
+                       conditions = c("**Cognate**: /gat-gato/",
+                                      "**Non-cognate**: /gos-pero/")) |>
+    filter(hypothesis=="H0") |> 
+    mutate(language = ifelse(language=="L1", "Catalan", "Spanish"))
+
+aoa_df <- generate_aoa(eli_df, threshold = threshold) |>
+    mutate(across(aoa, lst(min, max)), .by = c(te, language)) |>
+    filter(hypothesis=="H0")
+# 
+# img <- c(cat = "images/diagram_cat.png",
+#          dog = "images/diagram_dog.png") |>
+#     map(magick::image_read) |>
+#     map(\(x) magick::image_ggplot(x, interpolate = FALSE))
+
+eli_df |>
+    ggplot(aes(age, eli,
+               colour = language)) +
+    facet_grid(~ te) +
+    geom_segment(data = aoa_df,
+                 aes(x = aoa,
+                     xend = aoa,
+                     y = 0,
+                     yend = threshold),
+                 linewidth = 3/4) +
+    geom_hline(yintercept = aoa_df$threshold) +
+    geom_line(linewidth = 1) +
+    geom_point(data = aoa_df,
+               stroke = 0.75,
+               aes(x = aoa, y = threshold),
+               size = 2.25,
+               na.rm = TRUE) +
+    geom_label(data = aoa_df,
+               aes(x = aoa,
+                   y = threshold,
+                   label = round(aoa, 2),
+                   fill = language),
+               size = 3.5,
+               label.r = unit(0, "lines"),
+               label.size = 0,
+               colour = "black",
+               na.rm = TRUE,
+    ) +
+    labs(x = "Age (months)",
+         y = "Cumulative\nlearning instances",
+         colour = "",
+         shape = "Hypothesis",
+         fill = "",
+         linetype = "Hypothesis") +
+    scale_y_continuous(labels = function(x) format(x, big.mark = ",")) +
+    theme_ggdist() +
+    theme(panel.background = element_rect(fill = NA),
+          legend.key.width = unit(1.5, "cm"),
+          legend.position = "none",
+          legend.margin = margin(c(0, 0, 0, 0)),
+          legend.justification = c(0, 1),
+          legend.title = element_text(size = 9),
+          legend.text= element_text(size = 8),
+          strip.background = element_rect(fill = "grey90", colour = "grey90"),
+          strip.text = element_markdown(size = 12),
+          panel.grid = element_blank(),
+          panel.grid.major.y = element_line(colour = "grey",
+                                            linetype = "dotted"),
+          panel.grid.minor.y = element_line(colour = "grey",
+                                            linetype = "dotted")) +
+    scale_x_continuous(breaks = seq(min(eli_df$age),
+                                    max(eli_df$age), 4)) +
+    theme(panel.grid = element_blank(),
+          plot.background = element_rect(fill = "white",
+                                         colour = NA))
+
+```
+
+
+## Simulating bilingual word acquisition
+
+<br> 
+$$
+\begin{aligned}
+\text{Learning instances} &= Age_i \cdot Frequency_j \cdot (c \cdot Similarity_j)
+\end{aligned}
+$$
+
+::: columns
+
+:::: {.column width="50%"}
+
+![](images/diagram_cat.png)
+
+::::
+
+:::: {.column width="50%"}
+
+![](images/diagram_dog.png)
+
+::::
+
+:::
+
+## Simulating bilingual word acquisition
+
+### Catalan-Spanish bilingual (no parallel activation)
+
+::: columns
+
+:::: {.column width="50%"}
+
+| Catalan | Spanish |
+|:-------:|:-------:|
+| 60%     | 40%     |
+
+::::
+
+:::: {.column width="50%"}
+
+::::: info-box
+
+$$
+\text{Threshold}_{ij} = 300 \\
+\text{Frequency}_{j} \sim \text{Poisson}(\lambda) \\
+\lambda = 50
+$$
+
+:::::
+
+::::
+
+:::
+
+```{r eli}
+#| label: eli-bilingual-h0
+#| fig-width: 7
+#| fig-height: 3.25
+#| out-width: 150%
+#| out-height: 100%
+#| fig-align: center
+eli_df <- generate_eli(threshold = threshold,
+                       age = seq(1, 50, length.out = 100),
+                       freq_month = 50,
+                       freq_beta = 1,
+                       l1_doe = 0.60,
+                       parallel_beta = 0,
+                       conditions = c("**Cognate**: /gat-gato/",
+                                      "**Non-cognate**: /gos-pero/")) |>
+    filter(hypothesis=="H0") |> 
+    mutate(language = ifelse(language=="L1", "Catalan", "Spanish"))
+
+aoa_df <- generate_aoa(eli_df, threshold = threshold) |>
+    mutate(across(aoa, lst(min, max)), .by = c(te, language)) |>
+    filter(hypothesis=="H0")
+# 
+# img <- c(cat = "images/diagram_cat.png",
+#          dog = "images/diagram_dog.png") |>
+#     map(magick::image_read) |>
+#     map(\(x) magick::image_ggplot(x, interpolate = FALSE))
+
+eli_df |>
+    ggplot(aes(age, eli,
+               colour = language)) +
+    facet_grid(~ te) +
+    geom_segment(data = aoa_df,
+                 aes(x = aoa,
+                     xend = aoa,
+                     y = 0,
+                     yend = threshold),
+                 linewidth = 3/4) +
+    geom_hline(yintercept = aoa_df$threshold) +
+    geom_line(linewidth = 1) +
+    geom_point(data = aoa_df,
+               stroke = 0.75,
+               aes(x = aoa, y = threshold),
+               size = 2.25,
+               na.rm = TRUE) +
+    geom_label(data = aoa_df,
+               aes(x = aoa,
+                   y = threshold,
+                   label = round(aoa, 2),
+                   fill = language),
+               size = 3.5,
+               label.r = unit(0, "lines"),
+               label.size = 0,
+               colour = "black",
+               na.rm = TRUE,
+    ) +
+    labs(x = "Age (months)",
+         y = "Cumulative\nlearning instances",
+         colour = "",
+         shape = "Hypothesis",
+         fill = "",
+         linetype = "Hypothesis") +
+    scale_y_continuous(labels = function(x) format(x, big.mark = ",")) +
+    theme_ggdist() +
+    theme(panel.background = element_rect(fill = NA),
+          legend.key.width = unit(1.5, "cm"),
+          legend.position = "none",
+          legend.margin = margin(c(0, 0, 0, 0)),
+          legend.justification = c(0, 1),
+          legend.title = element_text(size = 9),
+          legend.text= element_text(size = 8),
+          strip.background = element_rect(fill = "grey90", colour = "grey90"),
+          strip.text = element_markdown(size = 12),
+          panel.grid = element_blank(),
+          panel.grid.major.y = element_line(colour = "grey",
+                                            linetype = "dotted"),
+          panel.grid.minor.y = element_line(colour = "grey",
+                                            linetype = "dotted")) +
+    scale_x_continuous(breaks = seq(min(eli_df$age),
+                                    max(eli_df$age), 4)) +
+    theme(panel.grid = element_blank(),
+          plot.background = element_rect(fill = "white",
+                                         colour = NA))
+
+```
+
+
+## Simulating bilingual word acquisition
+
+### Catalan-Spanish bilingual (parallel activation)
+
+::: columns
+
+:::: {.column width="50%"}
+
+| Catalan | Spanish |
+|:-------:|:-------:|
+| 75%     | 25%     |
+
+::::
+
+:::: {.column width="50%"}
+
+::::: info-box
+
+$$
+\text{Threshold} = 250 \\
+\text{Freq. per month} \sim \text{Poisson}(1)
+$$
+
+:::::
+
+::::
+
+:::
+
+```{r eli}
+#| label: eli-bilingual-h1
+#| fig-width: 7
+#| fig-height: 3.25
+#| out-width: 150%
+#| out-height: 100%
+#| fig-align: center
+eli_df <- generate_eli(threshold = threshold,
+                       age = seq(0, 50, by = 1),
+                       l1_doe = 0.60,
+                       freq_month = 50,
+                       freq_beta = 1,
+                       conditions = c("**Cognate**: /gat-gato/",
+                                      "**Non-cognate**: /gos-pero/")) |>
+    filter(hypothesis=="H1") |> 
+    mutate(language = ifelse(language=="L1", "Catalan", "Spanish"))
+
+aoa_df <- generate_aoa(eli_df, threshold = 250) |>
+    mutate(across(aoa, lst(min, max)), .by = c(te, language)) |>
+    filter(hypothesis=="H1")
+# 
+# img <- c(cat = "images/diagram_cat.png",
+#          dog = "images/diagram_dog.png") |>
+#     map(magick::image_read) |>
+#     map(\(x) magick::image_ggplot(x, interpolate = FALSE))
+
+eli_df |>
+    ggplot(aes(age, eli,
+               colour = language)) +
+    facet_grid(~ te) +
+    geom_segment(data = aoa_df,
+                 aes(x = aoa,
+                     xend = aoa,
+                     y = 0,
+                     yend = threshold),
+                 linewidth = 3/4) +
+    geom_hline(yintercept = aoa_df$threshold) +
+    geom_line(linewidth = 1) +
+    geom_point(data = aoa_df,
+               stroke = 0.75,
+               aes(x = aoa, y = threshold),
+               size = 2.25,
+               na.rm = TRUE) +
+    geom_label(data = aoa_df,
+               aes(x = aoa,
+                   y = threshold,
+                   label = round(aoa, 2),
+                   fill = language),
+               size = 3.5,
+               label.r = unit(0, "lines"),
+               label.size = 0,
+               colour = "black",
+               na.rm = TRUE,
+    ) +
+    labs(x = "Age (months)",
+         y = "Cumulative\nlearning instances",
+         colour = "",
+         shape = "Hypothesis",
+         fill = "",
+         linetype = "Hypothesis") +
+    scale_y_continuous(labels = function(x) format(x, big.mark = ",")) +
+    theme_ggdist() +
+    theme(panel.background = element_rect(fill = NA),
+          legend.key.width = unit(1.5, "cm"),
+          legend.position = "none",
+          legend.margin = margin(c(0, 0, 0, 0)),
+          legend.justification = c(0, 1),
+          legend.title = element_text(size = 9),
+          legend.text= element_text(size = 8),
+          strip.background = element_rect(fill = "grey90", colour = "grey90"),
+          strip.text = element_markdown(size = 12),
+          panel.grid = element_blank(),
+          panel.grid.major.y = element_line(colour = "grey",
+                                            linetype = "dotted"),
+          panel.grid.minor.y = element_line(colour = "grey",
+                                            linetype = "dotted")) +
+    scale_x_continuous(breaks = seq(min(eli_df$age),
+                                    max(eli_df$age), 4)) +
+    theme(panel.grid = element_blank(),
+          plot.background = element_rect(fill = "white",
+                                         colour = NA))
+
+```
+
+# Methods {background-color="#f0f2f0"}
+
+## Questionnaire
+
+<br>
+
+- On-line, inspired in MacArthur-Bates CDI
+
+- ~1,600 items/words (800 Catalan + 800 Spanish)
+
+- Participants filled one of 4 versions of the questionnaire:
+* 500 items: 250 Catalan + 250 Spanish
+
+- Short-listed (nouns): `r length(unique(items$te))` translation equivalents (TE)
+
+
+## Participants
+
+```{r longitudinal}
+lpar <- participants |> 
+    count(id, name = "times") |> 
+    count(times)
+
+```
+
+::: columns
+
+:::: {.column width=40%}
+
+**`r format(nrow(distinct(responses)), big.mark = ",")` responses** from **`r nrow(distinct(responses, id))` participants**
+
+::::
+
+:::: {.column width=60%}
+
+
+| 1 time      | 2 times     | 3 times     | 4 times     |
+|:-----------:|:-----------:|:-----------:|:-----------:|
+|`r lpar$n[1]`|`r lpar$n[2]`|`r lpar$n[3]`|`r lpar$n[4]`|
+
+::::
+
+:::
+
+```{r participants-age}
+#| label: participants-age
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-align: center
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: 100%
+participants %>% 
+    mutate(age = floor(age)) %>% 
+    count(age) %>% 
+    ggplot() +
+    aes(x = age, y = n) +
+    geom_col(fill = "grey70") +
+    geom_text(aes(label = n), size = 3.5, vjust = -1) +
+    labs(
+        x = "Age (months)",
+        y = "# participants"
+    ) +
+    scale_x_continuous(breaks = seq(0, 40, 2)) +
+    scale_y_continuous(limits = c(0, 55), breaks = seq(0, 55, 10)) +
+    theme(
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()
+    ) +
+    
+    participants %>% 
+    mutate(across(starts_with("doe_"), 
+                  \(x) cut(x, seq(0, 1, 0.1), include.lowest = TRUE))) |>
+    count(doe_catalan) |> 
+    ggplot() +
+    aes(x = doe_catalan, y = n) +
+    geom_col(fill = "grey70") +
+    geom_text(aes(label = n), size = 3.5, vjust = -1) +
+    labs(
+        x = "Catalan exposure",
+        y = "# participants"
+    ) +
+    theme(
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()
+    ) +
+    
+    plot_layout(ncol = 1)
+```
+
+## Modelling
+
+<br>
+
+**Ordinal** regression model: $P(Understands)$, $P(Says)$
+
+- *No* < *Understands* < *Understands and Says*
+
+**Multilevel**: Crossed-random effects
+
+- *Participant* and *Translation equivalent* as grouping variables
+
+**Bayesian**: probability of parameter values
+
+$$P(\text{model} | \text{data}) \propto P(\text{data} | \text{model}) \times P(\text{model})$$
+
+
+## Modelling
+
+### Predictors
+
+- $\text{Age}_{i}$ in months
+- $\text{Length}$: number of phonemes
+* $\text{cadira}_{\text{cat}}$ /kəˈdi.ɾə/ = 6)
+- $\text{Exposure}_{ij}$: $\text{Frequency}_{j} \cdot \text{Language exposure}_{i}$
+*cadira* [chair]: `r round(items$freq[items$item=="cadira"], 2)` Zipf freq. per million, 0.5 $\text{DoE}_{cat}$ = `r round(items$freq[items$item=="cadira"]/0.5, 2)`
+- $\text{Cognateness}_j$: Levenshtein similarity between the word-form $j$ and its translation
+/`r ipa::xsampa('k@"Di.4@')`-`r ipa::xsampa('"si.La')`/ [chair] = `r round(stringdist::stringsim("k@Di4@", "siLa"), 2)`
+
+# Results
+
+## Regression coefficients
+
+```{r regression-coefs}
+post_draws %>% 
+    group_by(.variable_name) |> 
+    # filter(!grepl("Intercept|sd", .variable)) %>%
+    median_hdi(
+        .exclude = c(
+            ".chain", 
+            ".iteration",
+            ".draw",
+            ".row", 
+            ".variable",
+            ".type"
+        )
+    )
+summarise(
+    .value = median(.value),
+    .rope = mean(!between(.value, -0.1, 0.1)),
+    .lower = hdci(.value, .width = 0.95),
+    .upper = hdci(.value, .width = 0.95),
+    
+    .by = c(.variable_name, .type)
+) |> 
+    mutate(.upper = ul(.lower),
+           across(where(is.numeric),
+                  \(x) ifelse(grepl("Intercept", .type), plogis(x), x/4)
+           )) |> 
+    gt(rowname_col = ".variable_name",
+       groupname_col = ".type") |> 
+    fmt_number(where(is.numeric), decimals = 3) |> 
+    cols_merge(.lower:.upper, pattern = "[{1}, {2}]")
+```
+
+
+```{r regression-coefs}
+post_summary <- post_draws %>% 
+    group_by(.variable_name) |> 
+    # filter(!grepl("Intercept|sd", .variable)) %>%
+    median_hdi(
+        .exclude = c(
+            ".chain", 
+            ".iteration",
+            ".draw",
+            ".row", 
+            ".variable",
+            ".type"
+        )
+    )
+
+post_draws %>%
+    # filter(!grepl("Intercept|sd", .variable)) %>%
+    ggplot(aes(.value, fct_rev(.variable_name))) +
+    annotate(geom = "rect",
+             ymin = -Inf,
+             ymax = Inf,
+             xmin = -0.10,
+             xmax = 0.10,
+             # xmin = rope_interval["lower"],
+             # xmax = rope_interval["upper"],
+             colour = NA,
+             alpha = 0.5,
+             fill = "grey") +
+    geom_vline(xintercept = 0,
+               size = 1,
+               colour = "grey") +
+    stat_slab(
+        aes(fill = stat(abs(x) < 0.10),
+            colour = stat(abs(x) < 0.10)),
+        size = 0.25,
+        position = position_nudge(y = 0.15)
+    ) +
+    geom_errorbar(data = post_summary,
+                  aes(xmin = .lower, xmax = .upper, x = .value),
+                  width = 0.15) +
+    geom_point(data = post_summary, size = 2) 
+geom_text(
+    data = post_summary,
+    aes(
+        label = paste0(
+            round(.value, 2),
+            " [", round(.lower, 2), ", ",
+            round(.upper, 2), "]"
+        )
+    ),
+    position = position_nudge(y = -0.25),
+    size = 3
+) +
+    
+    labs(
+        x = "Coefficient estimate (logit scale)",
+        y = "Variable", 
+        fill = "Overlaps with ROPE (-0.1, +0.1)",
+        colour = "Overlaps with ROPE (-0.1, +0.1)"
+    ) +
+    scale_x_continuous(breaks = seq(-0.4, 2, 0.2)) +
+    # scale_fill_manual(
+    #     values = c("dodgerblue", "#b3d9ff"),
+    #     labels = c("No", "Yes")
+    # ) +
+    # scale_colour_manual(
+    #     values = c("dodgerblue", "#b3d9ff"),
+    #     labels = c("No", "Yes")
+    # ) +
+    theme(
+        legend.position = "top",
+        legend.justification = c(1, 1),
+        axis.title.y = element_blank(),
+        panel.grid.major.x = element_line(
+            colour = "grey85",
+            linetype = "dotted"
+        ),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.x = element_blank()
+    ) 
+```
+
+
 ```
 
 ## Regression table
 
-### modelsummary
-
-If you use `modelsummary` with this Quarto theme, we advise setting the `gt`
-backend for a cleaner aesthetic. More details
-[here](https://vincentarelbundock.github.io/modelsummary/articles/appearance.html).
-
-```{r}
-#| echo: true
-#| output-location: slide
-
-library(modelsummary)
-options(modelsummary_factory_default = "gt")
-
-modelsummary(
-  setNames(mods, c("(1)", "(2)")),
-  coef_map = dict, stars = TRUE,
-  gof_omit = "Adj|IC|F|Log|RMSE"
-  ) |>
-  gt::tab_spanner(
-    label = "Dependent variable: Overall Rating",
-    columns = 2:3
-  )
-```
 
 ## Regression table
 
@@ -278,8 +863,8 @@ can use the `markdown = TRUE` option to make them work with this theme too.
 (Details
 [here](https://lrberge.github.io/fixest/articles/etable_new_features.html).) Quick notes:
 
- - Install the `tinytex` & `pdftools` packages first.
- - Set the R chunk option `output: asis`. 
+- Install the `tinytex` & `pdftools` packages first.
+- Set the R chunk option `output: asis`. 
 
 ````
 ```{{r}}
@@ -318,38 +903,6 @@ Ideally, your figure will be the same aspect ratio as the screen that you're pre
 
 ## {background-image="images/kanagawa169.jpg" background-size="100%"}
 
-## Interactive plots
-
-```{r}
-#| out-width: 75%
-
-library(threejs)
-
-# Approximate locations as factors
-data(flights)
-dest = factor(sprintf("%.2f:%.2f", flights[,3], flights[,4]))
-
-# A table of destination frequencies
-freq = sort(table(dest), decreasing=TRUE)
-
-# The most frequent destinations in these data
-frequent_destinations = names(freq)[1:10]
-
-# Subset the flight data by destination frequency
-idx = dest %in% frequent_destinations
-frequent_flights = flights[idx, ]
-
-# Lat/long and counts of frequent flights
-ll = unique(frequent_flights[, 3:4])
-
-# Plot frequent destinations as bars, and the flights to and from
-# them as arcs. Adjust arc width and color by frequency.
-globejs(lat=ll[, 1], long=ll[, 2], arcs=frequent_flights,
-        # bodycolor="#aaaaff", arcsHeight=0.3, arcsLwd=2,
-        bodycolor="#fff", arcsHeight=0.3, arcsLwd=2,
-        arcsColor="#ffff00", arcsOpacity=0.15,
-        atmosphere=TRUE, color="#fff", pointsize=0.5)
-```
 
 _Note: Simple flight data example using `threejs`. There are many interactive
 plotting options beyond this.
@@ -378,18 +931,88 @@ Use these demo slides as a template:
 quarto use template grantmcdermott/quarto-revealjs-clean-demo
 ```
 
+## Appendix
+
+### Item properties
+
+```{r items}
+#| label: items
+#| out-width: 100%
+#| fig-width: 8
+#| fig-height: 2
+items |> 
+count(language, n_phon) |> 
+ggplot(aes(n_phon, n,
+fill = language)) +
+geom_col(position = position_dodge()) +
+labs(title = "Number of phonemes",
+fill = "Language") +
+
+items |> 
+count(language, n_syll) |> 
+ggplot(aes(n_syll, n,
+fill = language)) +
+geom_col(position = position_dodge(),
+show.legend = FALSE) +
+labs(title = "Number of syllables",
+fill = "Language") +
+
+items |> 
+ggplot(aes(freq)) +
+stat_slab(show.legend = FALSE,
+fill = "grey70",
+colour = "white") +
+labs(title = "Lexical frequency",
+fill = "Language") +
+
+
+items |>
+distinct(te, lv) |> 
+ggplot(aes(lv)) +
+stat_slab(fill = "grey70",
+colour = "white") +
+labs(title = "Phonological similarity",
+fill = "Language") +
+
+
+plot_layout(nrow = 1, guides = "collect") &
+theme(legend.position = "bottom",
+axis.title.x = element_blank(),
+axis.title.y = element_blank(),
+axis.text.y = element_blank())
+```
+
+## Levenshtein similarity
+
+### Phonological similarity {.smaller}
+
+**Levenshtein distance**: number of edits for two character strings to become identical
+
+|         	| Orthography 	| Phonology 	| String 	|
+|---------	|-------------	|-----------	|--------	|
+| Catalan 	| *porta*      	| /ˈpɔɾ.tə/    	| `pɔɾtə`  	|
+| Spanish 	| *puerta*     	| /ˈpweɾ.ta/   	| `pweɾta` 	|
+
+## Levenshtein similarity
+
+$$
+1-\frac{lev(A, B)}{Max(length(A), length(B))}
+$$
+<br> 
+
+| Catalan 	                | Spanish   	            | Levenshtein 	    |       
+|---------	                |---------	                |-----	            |
+| *porta* (/ˈpɔɾ.tə/)  	    | *puerta* (/ˈpweɾ.ta/)     |   0.50 (3)  	    |
+| *taula* (/ˈtaw.lə/)       | *mesa* (/ˈmesa/)          |   0.00 (5)    	|
+| *cotxe* (/ˈkɔ.t͡ʃə/)	    | *coche* (/ˈkot͡ʃe/) 	    |   0.40 (3)  	    | 
+| ...     	                | ...     	                | ... 	            |
+
+
 ## References
 
 ::: {#refs}
 :::
 
-## Appendix {#sec-appendix}
 
-```{r}
-#| label: tbl-attsum
-#| tbl-cap: Summary of the base R `attitude` dataset
-
-modelsummary::datasummary_skim(attitude)
-```
 
 [[Back to main]{.button}](#sec-crossref)
