@@ -29,6 +29,7 @@ author:
 bibliography: ../assets/references.bib
 echo: false
 warning: false
+dpi: 800
 ---
 
 ```{r setup}
@@ -65,19 +66,39 @@ post_summary <- readRDS(here("results", "posterior", "post_summary.rds"))
 
 ## Bilingual word acquisition
 
-Learning words is very important
+<br>
 
-Learning a word involves the association between a linguistic form to its referent(s) (very complex)
+Word acquisition starts around **6 months** of age [@jusczyk1995infants; @tincoff1999beginnings; @bergelson2012months]
 
-Bilinguals face the challenge of learning more than one word-form per referent
+Word-learning involves the (challenging) task of **associating a word-form to its referential context** (ambiguous, variable)
 
-We still don't know much about how bilingualism impacts word learning
+**Bilinguals** face the challenge of learning more than one word-form per referent
+
+Bilinguals keep up with their monolinguals: how?
 
 ## Learning outputs: measuring vocabulary size
 
 <br>
 
+::: columns
+
+:::: {.column width="50%"}
+
 **Vocabulary checklist**: number/proportion of words checked by caregivers as `Understands`, and/or `Says`
+
+::::
+
+:::: {.column width="50%"}
+
+|      | Understands   | Understands & Says   |
+|:-----|:-------------:|:--------------------:|
+|chair | [  ]          | [  ]                 |
+|table | [  ]          | [  ]                 |
+| ...  | [  ]          | [  ]                 |
+
+::::
+
+:::
 
 <br>
 
@@ -91,7 +112,7 @@ Bilingual toddlers learning two typologically close languages showed larger voca
 
 ::: goal
 
-**Cognate**: form-similar translation equivalents
+**Cognate**: form-similar translation equivalents (TEs)
 
 | *Cognate*           | *Non-cognate*       |
 |:-------------------:|:-------------------:|
@@ -99,7 +120,9 @@ Bilingual toddlers learning two typologically close languages showed larger voca
 
 :::
 
-Cognateness facilitates vocabulary growth: **mechanisms?**
+Bilinguals acquire TEs from early steps of vocabulary growth [@bilson2015semantic; @tsui2022are]
+
+Cognateness facilitates vocabulary growth? **Mechanisms?**
 
 
 ## Parallel activation: candidate mechanism?
@@ -112,8 +135,7 @@ Cognateness facilitates vocabulary growth: **mechanisms?**
 
 Lexical access is **language non-selective**:
 
-Translation equivalents are co-activated
-Even in monolingual situations
+Translation equivalents are co-activated, even in monolingual situations
 
 :::
 
@@ -162,22 +184,27 @@ tibble(x = c(-1, 1),
 
 :::: {.column width="50%"}
 
-Cognates are acquired earlier than non-cognates [@mitchell2022cognates]
+Cognates are acquired earlier than non-cognates [@mitchell2022cognates; @bosch2014first]
 
-Dissociation between models of bilingual word processing (parallel activation) and word acquisition
+**Dissociation** between models of bilingual word processing (parallel activation) and word acquisition
 
 ::::
-
 
 ::::
 
 :::
 
-## An accumulator model of word acquisition
+# Simulating word acquisition {background-color="#f0f2f0"}
+
+## Accumulator models
+
+<br>
+
+Word acquisition as a continuous process of lexical consolidation [@hidaka2013computational; @mollica2017how]
 
 ![](images/accumulator-diagram.png){width=14in, fig-align:center}
 
-## An accumulator model of word acquisition
+---
 
 <br>
 
@@ -194,7 +221,7 @@ $$
 
 $$
 \begin{aligned}
-\text{Age of acquisition}_{ij} &= min(\text{Threshold}_{ij}-\text{Learning instances}_{ij}) 
+\text{Age of acquisition}_{ij} &= \text{minimize}(|\text{Threshold}_{ij}-\text{Learning instances}_{ij}|) 
 \end{aligned}
 $$
 
@@ -202,36 +229,38 @@ $$
 
 ::: columns
 
-:::: {.column width="50%"}
+:::: {.column width="40%"}
 
 We fix some parameters:
 
 $$
 \begin{aligned}
-\text{Threshold} &= 250 \\
-\lambda &= 1
+\text{Threshold} &= 250 \\ 
+\lambda &= 50
 \end{aligned}
 $$
 
 ::::
 
-:::: {.column width="50%"}
+:::: {.column width="60%"}
 
 ```{r poisson-1}
 #| label: poisson-1
-#| out-width: 50%
+#| out-width: 120%
+#| fig-width: 4
+#| fig-height: 1.5
 data.frame(lambda = 50) %>%
     ggplot(aes(xdist = dist_poisson(lambda))) +
     stat_histinterval(point_interval = NULL,
                       slab_colour = "white",
                       outline_bars = TRUE) +
     coord_cartesian(expand = FALSE) +
-    labs(
-        title = "Poisson distribution",
-        x = NULL,
-        y = NULL
-    ) +
-    theme_ggdist()
+    labs(title = "Poisson distribution",
+         x = NULL,
+         y = NULL) +
+    scale_x_continuous(breaks = seq(0, 100, 10)) +
+    theme_ggdist() +
+    theme(axis.text.y = element_blank())
 ```
 
 ::::
@@ -239,9 +268,9 @@ data.frame(lambda = 50) %>%
 :::
 
 
-## Simulating word acquisition
+# Simulating word acquisition
 
-### Catalan monolingual (no parallel activation)
+## Catalan monolingual (no parallel activation)
 
 ::: columns
 
@@ -355,14 +384,7 @@ eli_df |>
 ```
 
 
-## Simulating bilingual word acquisition
-
-<br> 
-$$
-\begin{aligned}
-\text{Learning instances} &= Age_i \cdot Frequency_j \cdot (c \cdot Similarity_j)
-\end{aligned}
-$$
+## Including learning instances from **parallel activation**
 
 ::: columns
 
@@ -380,35 +402,20 @@ $$
 
 :::
 
-## Simulating bilingual word acquisition
+$$
+\begin{aligned}
+\text{Learning instances}_{ij} &= Age_i \cdot Frequency_j + \\
+&(Similarity_j \cdot \text{Learning instances}_{ij'})
+\end{aligned}
+$$
 
-### Catalan-Spanish bilingual (no parallel activation)
+## Catalan-Spanish bilingual (no parallel activation)
 
-::: columns
-
-:::: {.column width="50%"}
 
 | Catalan | Spanish |
 |:-------:|:-------:|
 | 60%     | 40%     |
 
-::::
-
-:::: {.column width="50%"}
-
-::::: info-box
-
-$$
-\text{Threshold}_{ij} = 300 \\
-\text{Frequency}_{j} \sim \text{Poisson}(\lambda) \\
-\lambda = 50
-$$
-
-:::::
-
-::::
-
-:::
 
 ```{r eli}
 #| label: eli-bilingual-h0
@@ -500,30 +507,11 @@ eli_df |>
 
 ### Catalan-Spanish bilingual (parallel activation)
 
-::: columns
-
-:::: {.column width="50%"}
 
 | Catalan | Spanish |
 |:-------:|:-------:|
 | 75%     | 25%     |
 
-::::
-
-:::: {.column width="50%"}
-
-::::: info-box
-
-$$
-\text{Threshold} = 250 \\
-\text{Freq. per month} \sim \text{Poisson}(1)
-$$
-
-:::::
-
-::::
-
-:::
 
 ```{r eli}
 #| label: eli-bilingual-h1
@@ -702,6 +690,8 @@ participants %>%
 
 ## Modelling
 
+### Model structure
+
 <br>
 
 **Ordinal** regression model: $P(Understands)$, $P(Says)$
@@ -721,215 +711,129 @@ $$P(\text{model} | \text{data}) \propto P(\text{data} | \text{model}) \times P(\
 
 ### Predictors
 
-- $\text{Age}_{i}$ in months
-- $\text{Length}$: number of phonemes
-* $\text{cadira}_{\text{cat}}$ /kəˈdi.ɾə/ = 6)
-- $\text{Exposure}_{ij}$: $\text{Frequency}_{j} \cdot \text{Language exposure}_{i}$
-*cadira* [chair]: `r round(items$freq[items$item=="cadira"], 2)` Zipf freq. per million, 0.5 $\text{DoE}_{cat}$ = `r round(items$freq[items$item=="cadira"]/0.5, 2)`
-- $\text{Cognateness}_j$: Levenshtein similarity between the word-form $j$ and its translation
-/`r ipa::xsampa('k@"Di.4@')`-`r ipa::xsampa('"si.La')`/ [chair] = `r round(stringdist::stringsim("k@Di4@", "siLa"), 2)`
 
-# Results
+| Predictor | Example       |
+|:----------|:--------------|
+| Age       | Months      |
+|Length     |Number of phonemes |
+|Exposure   | Lexical frequency $\times$ Language exposure |
+|Cognateness|Levenshtein similarity between a word-form and its translation|
+|Two-way and three-way interactions between age, exposure, and cogateness|
 
-## Regression coefficients
+
+# Results {background-color="#f0f2f0"}
+
+## Posterior distribution
 
 ```{r regression-coefs}
-post_draws %>% 
-    group_by(.variable_name) |> 
-    # filter(!grepl("Intercept|sd", .variable)) %>%
-    median_hdi(
-        .exclude = c(
-            ".chain", 
-            ".iteration",
-            ".draw",
-            ".row", 
-            ".variable",
-            ".type"
-        )
-    )
-summarise(
-    .value = median(.value),
-    .rope = mean(!between(.value, -0.1, 0.1)),
-    .lower = hdci(.value, .width = 0.95),
-    .upper = hdci(.value, .width = 0.95),
-    
-    .by = c(.variable_name, .type)
-) |> 
-    mutate(.upper = ul(.lower),
-           across(where(is.numeric),
-                  \(x) ifelse(grepl("Intercept", .type), plogis(x), x/4)
-           )) |> 
-    gt(rowname_col = ".variable_name",
-       groupname_col = ".type") |> 
-    fmt_number(where(is.numeric), decimals = 3) |> 
-    cols_merge(.lower:.upper, pattern = "[{1}, {2}]")
+#| fig-width: 10
+#| out-width: 100%
+
+post_summary |>
+    mutate(across(.median:.upper,
+                  \(x) ifelse(grepl("Intercept", .type), 
+                              plogis(x),
+                              x/4)),
+           hdi = paste0("[", round(.lower, 2), ", ", round(.upper, 2), "]")) |> 
+    select(-c(.variable, .type, .lower, .upper)) |> 
+    knitr::kable(
+        col.names = c("Predictor",
+                      "Estimate",
+                      "95% HDI", 
+                      "p(H0)"),
+        digits = 3) |> 
+    kableExtra::pack_rows("Intercepts", 1, 2)  |> 
+    kableExtra::pack_rows("Slopes", 3, 10) |> 
+    kableExtra::kable_styling(font_size = 27) |> 
+    kableExtra::kable_minimal(c("striped", "hover")) 
 ```
 
+## Posterior predictions
 
-```{r regression-coefs}
-post_summary <- post_draws %>% 
-    group_by(.variable_name) |> 
-    # filter(!grepl("Intercept|sd", .variable)) %>%
-    median_hdi(
-        .exclude = c(
-            ".chain", 
-            ".iteration",
-            ".draw",
-            ".row", 
-            ".variable",
-            ".type"
-        )
-    )
+```{r predictions}
+#| label: predictions
+#| out-width: 100%
+#| fig-height: 5
+#| fig-width: 8
+clrs_reorder <- c("#58508d", "#003f5c", "#122A36", "#ffa600", "#ff6361", "#bc5090")
 
-post_draws %>%
-    # filter(!grepl("Intercept|sd", .variable)) %>%
-    ggplot(aes(.value, fct_rev(.variable_name))) +
+post_preds |> 
+    mutate(age = (age_std * sd(responses$age)) + mean(responses$age),
+           exposure = factor(exposure_std,
+                             levels = unique(exposure_std),
+                             labels = c("Low exposure (-1 SD)",
+                                        "Mean exposure",
+                                        "High exposure (+1 SD)"),
+                             ordered = TRUE),
+           lv = factor(lv_std,
+                       levels = unique(lv_std),
+                       labels = paste0(c(0, 50, 100), "%"),
+                       ordered = TRUE),
+           .category = ifelse(.category=="Understands",
+                              "Comprehension",
+                              "Production")) |> 
+    ggplot(aes(age, .value, colour = lv, fill = lv)) +
+    facet_grid(.category~exposure) +
     annotate(geom = "rect",
+             xmin = min(responses$age),
+             xmax = max(responses$age),
              ymin = -Inf,
              ymax = Inf,
-             xmin = -0.10,
-             xmax = 0.10,
-             # xmin = rope_interval["lower"],
-             # xmax = rope_interval["upper"],
-             colour = NA,
-             alpha = 0.5,
-             fill = "grey") +
-    geom_vline(xintercept = 0,
-               size = 1,
-               colour = "grey") +
-    stat_slab(
-        aes(fill = stat(abs(x) < 0.10),
-            colour = stat(abs(x) < 0.10)),
-        size = 0.25,
-        position = position_nudge(y = 0.15)
-    ) +
-    geom_errorbar(data = post_summary,
-                  aes(xmin = .lower, xmax = .upper, x = .value),
-                  width = 0.15) +
-    geom_point(data = post_summary, size = 2) 
-geom_text(
-    data = post_summary,
-    aes(
-        label = paste0(
-            round(.value, 2),
-            " [", round(.lower, 2), ", ",
-            round(.upper, 2), "]"
-        )
-    ),
-    position = position_nudge(y = -0.25),
-    size = 3
-) +
-    
-    labs(
-        x = "Coefficient estimate (logit scale)",
-        y = "Variable", 
-        fill = "Overlaps with ROPE (-0.1, +0.1)",
-        colour = "Overlaps with ROPE (-0.1, +0.1)"
-    ) +
-    scale_x_continuous(breaks = seq(-0.4, 2, 0.2)) +
-    # scale_fill_manual(
-    #     values = c("dodgerblue", "#b3d9ff"),
-    #     labels = c("No", "Yes")
-    # ) +
-    # scale_colour_manual(
-    #     values = c("dodgerblue", "#b3d9ff"),
-    #     labels = c("No", "Yes")
-    # ) +
-    theme(
-        legend.position = "top",
-        legend.justification = c(1, 1),
-        axis.title.y = element_blank(),
-        panel.grid.major.x = element_line(
-            colour = "grey85",
-            linetype = "dotted"
-        ),
-        panel.grid.major.y = element_blank(),
-        panel.grid.minor.x = element_blank()
-    ) 
+             fill = "grey95",
+             colour = NA) +
+    annotate(geom = "text",
+             x = mean(responses$age),
+             y = 0,
+             hjust = -0.1,
+             vjust = 0,
+             label = "Observed age range",
+             size = 2) +
+    geom_vline(xintercept = mean(responses$age), 
+               linetype = "dotted") +
+    geom_hline(yintercept = 0.5,
+               linetype = "dotted") +
+    geom_line(aes(group = interaction(lv, .draw)),
+              linewidth = 0.5,
+              alpha = 1/10) +
+    stat_summary(fun = median, geom = "line", linewidth = 0.75) +
+    labs(x = "Age (months)",
+         y = "Probability of acquisition",
+         linetype = "Cognateness (phonological similarity)",
+         colour = "Cognateness (phonological similarity)",
+         fill = "Cognateness (phonological similarity)") +
+    guides(colour = guide_legend(override.aes = list(linewidth = 2))) +
+    scale_colour_manual(values = clrs_reorder[c(4, 5, 1)]) +
+    scale_fill_manual(values = clrs_reorder[c(4, 5, 1)]) +
+    scale_y_continuous(breaks = seq(0, 1, 0.25),
+                       limits = c(0, 1)) +
+    scale_x_continuous(breaks = seq(0, 50, 5)) +
+    theme(legend.position = "top",
+          legend.key.size = unit(1, "cm"),
+          legend.key.height = unit(1, "cm"),
+          axis.text.x = element_text(size = 9),
+          panel.grid = element_blank(),
+          panel.border = element_rect(fill = NA, 
+                                      colour = "black", 
+                                      linewidth = 0.75))
 ```
 
+# Discussion {.incremental}
 
-```
+::: box
 
-## Regression table
+**Cognateness facilitates word acquisition**
 
+Only **low-exposure** words benefit from their cognate status: less dominant language receives more facilitation
 
-## Regression table
+**Parallel activation** as mechanism that boosts lexical consolidation: increment in **cumulative learning instances**
 
-### etable
+:::
 
-`fixest`'s powerful native tabling functions were designed for LaTeX output. But we
-can use the `markdown = TRUE` option to make them work with this theme too. 
-(Details
-[here](https://lrberge.github.io/fixest/articles/etable_new_features.html).) Quick notes:
+Catalan-Spanish: very specific population
 
-- Install the `tinytex` & `pdftools` packages first.
-- Set the R chunk option `output: asis`. 
-
-````
-```{{r}}
-#| output: asis
-
-setFixest_etable(markdown = TRUE, drop = "Constant")
-setFixest_dict(dict)
-
-etable(mods, highlight = .("se" = "complaints"))
-```
-````
-
-## Regression table
-
-### etable (cont.)
+Next steps: word-learning, formalisation
 
 
-
-# Figures {background-color="#40666e"}
-
-## Figure
-
-![](images/kanagawa.jpg)
-
-## Figure
-
-### Full-size Figures
-
-You can use the `{.background-image}` container environment to completely fill
-the slide background with an image.
-
-Ideally, your figure will be the same aspect ratio as the screen that you're presenting on.
-
-- This can be a bit tricky because of the dynamic nature of Reveal.js / HTML. But its probably something close to 16:9.
-- Aspect ratio can also matter for a regular full-frame images (previous slide).
-
-## {background-image="images/kanagawa169.jpg" background-size="100%"}
-
-
-_Note: Simple flight data example using `threejs`. There are many interactive
-plotting options beyond this.
-(More [details](https://quarto.org/docs/interactive/).)_
-
-# Summary {background-color="#40666e"}
-
-## Summary
-
-### A minimal and elegant presentation theme
-
-
-The Quarto Revealjs clean theme is intended as a minimal and elegant presention theme.
-
-We have highlighted some theme-specific components. But all of the regular Revealjs functionality is supported ([chalkboard](https://quarto.org/docs/presentations/revealjs/presenting.html#chalkboard), etc.)
-
-Install the theme:
-
-```{.bash}
-quarto install extension grantmcdermott/quarto-revealjs-clean
-```
-
-Use these demo slides as a template:
-
-```{.bash}
-quarto use template grantmcdermott/quarto-revealjs-clean-demo
-```
 
 ## Appendix
 
@@ -941,45 +845,45 @@ quarto use template grantmcdermott/quarto-revealjs-clean-demo
 #| fig-width: 8
 #| fig-height: 2
 items |> 
-count(language, n_phon) |> 
-ggplot(aes(n_phon, n,
-fill = language)) +
-geom_col(position = position_dodge()) +
-labs(title = "Number of phonemes",
-fill = "Language") +
-
-items |> 
-count(language, n_syll) |> 
-ggplot(aes(n_syll, n,
-fill = language)) +
-geom_col(position = position_dodge(),
-show.legend = FALSE) +
-labs(title = "Number of syllables",
-fill = "Language") +
-
-items |> 
-ggplot(aes(freq)) +
-stat_slab(show.legend = FALSE,
-fill = "grey70",
-colour = "white") +
-labs(title = "Lexical frequency",
-fill = "Language") +
-
-
-items |>
-distinct(te, lv) |> 
-ggplot(aes(lv)) +
-stat_slab(fill = "grey70",
-colour = "white") +
-labs(title = "Phonological similarity",
-fill = "Language") +
-
-
-plot_layout(nrow = 1, guides = "collect") &
-theme(legend.position = "bottom",
-axis.title.x = element_blank(),
-axis.title.y = element_blank(),
-axis.text.y = element_blank())
+    count(language, n_phon) |> 
+    ggplot(aes(n_phon, n,
+               fill = language)) +
+    geom_col(position = position_dodge()) +
+    labs(title = "Number of phonemes",
+         fill = "Language") +
+    
+    items |> 
+    count(language, n_syll) |> 
+    ggplot(aes(n_syll, n,
+               fill = language)) +
+    geom_col(position = position_dodge(),
+             show.legend = FALSE) +
+    labs(title = "Number of syllables",
+         fill = "Language") +
+    
+    items |> 
+    ggplot(aes(freq)) +
+    stat_slab(show.legend = FALSE,
+              fill = "grey70",
+              colour = "white") +
+    labs(title = "Lexical frequency",
+         fill = "Language") +
+    
+    
+    items |>
+    distinct(te, lv) |> 
+    ggplot(aes(lv)) +
+    stat_slab(fill = "grey70",
+              colour = "white") +
+    labs(title = "Phonological similarity",
+         fill = "Language") +
+    
+    
+    plot_layout(nrow = 1, guides = "collect") &
+    theme(legend.position = "bottom",
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text.y = element_blank())
 ```
 
 ## Levenshtein similarity
