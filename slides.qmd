@@ -22,7 +22,7 @@ author:
     orcid: 0000-0001-7445-0416
   - name: "Núria Sebastian-Galles"
     orcid: 0000-0001-6938-2498
-bibliography: ../assets/references.bib
+bibliography: assets/references.bib
 echo: false
 warning: false
 fig-dpi: 1000
