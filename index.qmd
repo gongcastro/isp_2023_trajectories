@@ -91,12 +91,27 @@ Bilinguals keep up with their monolinguals: how?
 
 <br>
 
+English-Spanish bilinguals have **smaller English vocabulary sizes**, compared to monolinguals, but **similar vocabulary sizes when both language are summer together** [@hoff2012dual]
+
+## Linguistic distance
+
+<br>
+
+Bilingual toddlers learning two typologically close languages showed larger vocabulary sizes [@floccia2018introduction]
+
+::: goal
+
 **Cognate**: form-similar translation equivalents (TEs)
 
-**Bilinguals acquire TEs** from early ages [@bilson2015semantic; @tsui2022are]
+| *Cognate*           | *Non-cognate*       |
+|:-------------------:|:-------------------:|
+| [cat] /ˈgat-ˈgato/  | [dog] /ˈgos-ˈpe.ro/ |
+
+:::
+
+Bilinguals acquire TEs from early steps of vocabulary growth [@bilson2015semantic; @tsui2022are]
 
 Cognateness facilitates vocabulary growth? **Mechanisms?**
-
 
 ## Parallel activation: candidate mechanism?
 
@@ -175,15 +190,36 @@ Cognates are acquired earlier than non-cognates [@mitchell2022cognates; @bosch20
 
 Word acquisition as a continuous process of lexical consolidation [@hidaka2013computational; @mollica2017how]
 
+![](images/accumulator-diagram.png){width=14in, fig-align:center}
+
+---
+
+<br>
+
+For participant **$i$** and word **$j$**:
+
+::: info-box
+
+$$
+\begin{aligned}
+\text{Learning instances}_{ij} &= \text{Age}_i \cdot \text{Frequency}_j \\
+\text{Frequency}_j &\sim \text{Poisson}(\lambda)
+\end{aligned}
+$$
+
 $$
 \begin{aligned}
 \text{Age of acquisition}_{ij} &= \text{minimize}(|\text{Threshold}_{ij}-\text{Learning instances}_{ij}|) 
 \end{aligned}
 $$
 
+:::
+
 ::: columns
 
 :::: {.column width="40%"}
+
+We fix some parameters:
 
 $$
 \begin{aligned}
@@ -222,14 +258,33 @@ data.frame(lambda = 50) %>%
 
 # Simulating word acquisition
 
-## Catalan monolingual (no parallel activation)
+# Catalan monolingual (no parallel activation)
 
+::: columns
 
+:::: {.column width="50%"}
 
 | Catalan | Spanish |
 |:-------:|:-------:|
 | 100%    | 0%      |
 
+::::
+
+:::: {.column width="50%"}
+
+::::: info-box
+
+$$
+\text{Threshold} = 300 \\
+\text{Frequency}_{j} \sim \text{Poisson}(\lambda) \\
+\lambda = 50
+$$
+
+:::::
+
+::::
+
+:::
 
 ```{r eli}
 #| label: eli-monolingual
@@ -315,6 +370,8 @@ eli_df |>
                                          colour = NA))
 
 ```
+
+
 
 
 ## Including learning instances from **parallel activation**
