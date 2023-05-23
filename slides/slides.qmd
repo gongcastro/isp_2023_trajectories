@@ -13,56 +13,47 @@ format:
     background-transition: fade
     transition-speed: fast
     embed-resources: true
-    header-includes: |
-      <link rel="stylesheet" href="/assets/fontawesome-free-6.1.1-web/css/font-awesome.min.css">
-      <script defer src="/assets/fontawesome-free-6.1.1-web/js/all.min.js"></script>
-  beamer: default
 author:
-  - name: "Gonzalo Garcia-Castro<sup>1</sup>"
+  - name: "Gonzalo Garcia-Castro"
     orcid: 0000-0002-8553-4209
-  - name: "Daniela S. Ávila-Varela<sup>2</sup>"
+  - name: "Daniela S. Ávila-Varela"
     orcid: 0000-0002-3518-8117
-  - name: "Ignacio Castillejo<sup>3</sup>"
+  - name: "Ignacio Castillejo"
     orcid: 0000-0001-7445-0416
-  - name: "Núria Sebastian-Galles<sup>1</sup>"
+  - name: "Núria Sebastian-Galles"
     orcid: 0000-0001-6938-2498
 bibliography: ../assets/references.bib
 echo: false
 warning: false
-dpi: 800
+fig-dpi: 1000
 ---
 
 ```{r setup}
 #| label: setup
-#| echo: false
-#| warning: false
-#| message: false
-library(here)
+set.seed(888)
+
 library(tidyverse)
 library(patchwork)
-library(ggraph)
-library(tidygraph)
-library(distributional)
 library(ggdist)
-library(gt)
+library(ggtext)
+library(distributional)
 
-set.seed(888)
+file_paths <- list.files(here::here("R"),
+                         pattern = ".R$",
+                         full.names = TRUE)
+
+invisible(lapply(file_paths, source))
+
+items <- readRDS(here::here("data", "items.rds"))
+participants <- readRDS(here::here("data", "participants.rds"))
+responses <- readRDS(here::here("data", "responses.rds"))
+post_summary <- readRDS(here::here("results", "posterior", "post_summary.rds"))
+post_draws <- readRDS(here::here("results", "posterior", "posterior_draws.rds"))
+post_epreds <- readRDS(here::here("results", "predictions", "predictions.rds"))
 
 theme_set(theme_ggdist())
 
-file_paths <- list.files(here::here("R"), pattern = ".R$", full.names = TRUE)
-invisible(lapply(file_paths, source))
-
-items <- readRDS(here("data", "items.rds"))
-participants <- readRDS(here("data", "participants.rds"))
-responses <- readRDS(here("data", "responses.rds"))
-fit <- readRDS(here("results", "fits", "fit.rds"))
-post_draws <- readRDS(here("results", "posterior", "posterior_draws.rds"))
-post_preds <- readRDS(here("results", "predictions", "predictions.rds"))
-post_summary <- readRDS(here("results", "posterior", "post_summary.rds"))
-
 ```
-
 
 ## Bilingual word acquisition
 
@@ -78,17 +69,15 @@ Bilinguals keep up with their monolinguals: how?
 
 ## Learning outputs: measuring vocabulary size
 
-<br>
-
 ::: columns
 
-:::: {.column width="50%"}
+:::: {.column width="40%"}
 
 **Vocabulary checklist**: number/proportion of words checked by caregivers as `Understands`, and/or `Says`
 
 ::::
 
-:::: {.column width="50%"}
+:::: {.column width="60%"}
 
 |      | Understands   | Understands & Says   |
 |:-----|:-------------:|:--------------------:|
@@ -102,25 +91,9 @@ Bilinguals keep up with their monolinguals: how?
 
 <br>
 
-English-Spanish bilinguals have **smaller English vocabulary sizes**, compared to monolinguals, but **similar vocabulary sizes when both language are summer together** [@hoff2012dual]
-
-## Linguistic distance
-
-<br>
-
-Bilingual toddlers learning two typologically close languages showed larger vocabulary sizes [@floccia2018introduction]
-
-::: goal
-
 **Cognate**: form-similar translation equivalents (TEs)
 
-| *Cognate*           | *Non-cognate*       |
-|:-------------------:|:-------------------:|
-| [cat] /ˈgat-ˈgato/  | [dog] /ˈgos-ˈpe.ro/ |
-
-:::
-
-Bilinguals acquire TEs from early steps of vocabulary growth [@bilson2015semantic; @tsui2022are]
+**Bilinguals acquire TEs** from early ages [@bilson2015semantic; @tsui2022are]
 
 Cognateness facilitates vocabulary growth? **Mechanisms?**
 
@@ -202,36 +175,15 @@ Cognates are acquired earlier than non-cognates [@mitchell2022cognates; @bosch20
 
 Word acquisition as a continuous process of lexical consolidation [@hidaka2013computational; @mollica2017how]
 
-![](images/accumulator-diagram.png){width=14in, fig-align:center}
-
----
-
-<br>
-
-For participant **$i$** and word **$j$**:
-
-::: info-box
-
-$$
-\begin{aligned}
-\text{Learning instances}_{ij} &= \text{Age}_i \cdot \text{Frequency}_j \\
-\text{Frequency}_j &\sim \text{Poisson}(\lambda)
-\end{aligned}
-$$
-
 $$
 \begin{aligned}
 \text{Age of acquisition}_{ij} &= \text{minimize}(|\text{Threshold}_{ij}-\text{Learning instances}_{ij}|) 
 \end{aligned}
 $$
 
-:::
-
 ::: columns
 
 :::: {.column width="40%"}
-
-We fix some parameters:
 
 $$
 \begin{aligned}
@@ -272,31 +224,12 @@ data.frame(lambda = 50) %>%
 
 ## Catalan monolingual (no parallel activation)
 
-::: columns
 
-:::: {.column width="50%"}
 
 | Catalan | Spanish |
 |:-------:|:-------:|
 | 100%    | 0%      |
 
-::::
-
-:::: {.column width="50%"}
-
-::::: info-box
-
-$$
-\text{Threshold} = 300 \\
-\text{Frequency}_{j} \sim \text{Poisson}(\lambda) \\
-\lambda = 50
-$$
-
-:::::
-
-::::
-
-:::
 
 ```{r eli}
 #| label: eli-monolingual
@@ -503,9 +436,7 @@ eli_df |>
 ```
 
 
-## Simulating bilingual word acquisition
-
-### Catalan-Spanish bilingual (parallel activation)
+## Catalan-Spanish bilingual (parallel activation)
 
 
 | Catalan | Spanish |
@@ -603,11 +534,11 @@ eli_df |>
 
 <br>
 
-- On-line, inspired in MacArthur-Bates CDI
+- On-line [formr, @arslan2020formr], inspired in MacArthur-Bates CDI [@fenson1994variability]
 
 - ~1,600 items/words (800 Catalan + 800 Spanish)
 
-- Participants filled one of 4 versions of the questionnaire:
+- Participants filled one of four versions of the questionnaire:
 * 500 items: 250 Catalan + 250 Spanish
 
 - Short-listed (nouns): `r length(unique(items$te))` translation equivalents (TE)
@@ -626,7 +557,7 @@ lpar <- participants |>
 
 :::: {.column width=40%}
 
-**`r format(nrow(distinct(responses)), big.mark = ",")` responses** from **`r nrow(distinct(responses, id))` participants**
+**`r format(nrow(distinct(responses)), big.mark = ",")` item responses** from **`r nrow(distinct(responses, id))` participants**
 
 ::::
 
@@ -707,7 +638,7 @@ participants %>%
 $$P(\text{model} | \text{data}) \propto P(\text{data} | \text{model}) \times P(\text{model})$$
 
 
-## Modelling
+---
 
 ### Predictors
 
@@ -718,7 +649,7 @@ $$P(\text{model} | \text{data}) \propto P(\text{data} | \text{model}) \times P(\
 |Length     |Number of phonemes |
 |Exposure   | Lexical frequency $\times$ Language exposure |
 |Cognateness|Levenshtein similarity between a word-form and its translation|
-|Two-way and three-way interactions between age, exposure, and cogateness|
+|Two-way and three-way interactions between age, exposure, and cognateness|
 
 
 # Results {background-color="#f0f2f0"}
@@ -735,7 +666,7 @@ post_summary |>
                               plogis(x),
                               x/4)),
            hdi = paste0("[", round(.lower, 2), ", ", round(.upper, 2), "]")) |> 
-    select(-c(.variable, .type, .lower, .upper)) |> 
+    select(.variable_name, .median, hdi, .rope_overlap) |> 
     knitr::kable(
         col.names = c("Predictor",
                       "Estimate",
@@ -753,11 +684,12 @@ post_summary |>
 ```{r predictions}
 #| label: predictions
 #| out-width: 100%
-#| fig-height: 5
-#| fig-width: 8
+#| fig-height: 4
+#| fig-width: 6
+#| fig-align: center
 clrs_reorder <- c("#58508d", "#003f5c", "#122A36", "#ffa600", "#ff6361", "#bc5090")
 
-post_preds |> 
+post_epreds |> 
     mutate(age = (age_std * sd(responses$age)) + mean(responses$age),
            exposure = factor(exposure_std,
                              levels = unique(exposure_std),
@@ -817,9 +749,8 @@ post_preds |>
                                       linewidth = 0.75))
 ```
 
-# Discussion {.incremental}
+# Discussion
 
-::: box
 
 **Cognateness facilitates word acquisition**
 
@@ -827,12 +758,9 @@ Only **low-exposure** words benefit from their cognate status: less dominant lan
 
 **Parallel activation** as mechanism that boosts lexical consolidation: increment in **cumulative learning instances**
 
-:::
-
 Catalan-Spanish: very specific population
 
 Next steps: word-learning, formalisation
-
 
 
 ## Appendix
