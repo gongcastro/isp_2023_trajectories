@@ -1,7 +1,0 @@
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
-results/fits/*.rds
-results/posterior/*.rds
-results/predictions/*.rds
