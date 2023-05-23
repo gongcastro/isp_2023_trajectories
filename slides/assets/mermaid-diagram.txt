@@ -1,0 +1,21 @@
+graph LR;
+    classDef cnode fill:#f5f5f5,stroke-width:0px,text-align:center;
+    classDef cgroup fill:white,border-color:white;
+
+    subgraph one [Language exposure]
+        A(Word learning<br>instances)
+    end
+    one:::cgroup
+    
+    subgraph two [Mental lexicon]
+        A --> B(Consolidation of<br>representation)
+    end
+    two:::cgroup
+    
+    subgraph three [Learning outputs]
+        B --> C[Reported as acquired<br> by caregivers]
+        B --> D[Stronger naming effects<br> in experimental tasks]
+    end
+    three:::cgroup
+    
+    class A,B,C,D cnode;
