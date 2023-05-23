@@ -260,31 +260,12 @@ data.frame(lambda = 50) %>%
 
 # Catalan monolingual (no parallel activation)
 
-::: columns
-
-:::: {.column width="50%"}
 
 | Catalan | Spanish |
 |:-------:|:-------:|
 | 100%    | 0%      |
 
-::::
 
-:::: {.column width="50%"}
-
-::::: info-box
-
-$$
-\text{Threshold} = 300 \\
-\text{Frequency}_{j} \sim \text{Poisson}(\lambda) \\
-\lambda = 50
-$$
-
-:::::
-
-::::
-
-:::
 
 ```{r eli}
 #| label: eli-monolingual
