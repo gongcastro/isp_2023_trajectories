@@ -1,0 +1,11 @@
+".variable",".variable_name",".type",".median",".upper",".lower",".rope_overlap"
+"b_Intercept[1]","Comprehension and Production","Intercepts (at 22 months)",-0.249907,-0.0145047,-0.49585,0.0884210526315789
+"b_Intercept[2]","Comprehension","Intercepts (at 22 months)",2.68778,2.92039,2.44109,0
+"b_age_std","Age (+1 SD, 4.87, months)","Slopes",1.619675,1.80552,1.42697,0
+"b_exposure_std","Exposure (+1 SD, 1.81)","Slopes",0.933347,1.0736,0.802455,0
+"b_lv_std","Cognateness (+1 SD, 0.26)","Slopes",0.233506,0.415907,0.0569792,0.0371052631578947
+"b_n_phon_std","Length (+1 SD, 1.56 phonemes)","Slopes",-0.2480175,-0.142819,-0.345098,0
+"b_age_std:exposure_std","Age × Exposure","Slopes",0.285642,0.414351,0.157897,0
+"b_age_std:lv_std","Age × Cognateness","Slopes",0.05629295,0.102601,0.00115944,0.984736842105263
+"b_exposure_std:lv_std","Exposure × Cognateness","Slopes",-0.227679,-0.184045,-0.27577,0
+"b_age_std:exposure_std:lv_std","Age × Exposure × Cognateness","Slopes",-0.0720038,-0.0384565,-0.106301,0.974736842105263

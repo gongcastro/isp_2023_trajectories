@@ -36,6 +36,26 @@
   font-size: 1.2rem;
 }
 
+#rectangle {
+    width: 47%;
+    height:50%;
+    background:blue;
+    position:absolute;
+    top:35%;
+    left:40%;
+}
+
+.quarto-title-author {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.quarto-title-author-twitter {
+    img {
+        margin-bottom: 4px;
+    }
+}
+
 .info-box {
   margin-top: 5px;
   margin-bottom: 0px;
