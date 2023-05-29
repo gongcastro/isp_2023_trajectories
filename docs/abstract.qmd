@@ -1,10 +1,10 @@
 ---
 title: "Cognateness, frequency, and vocabulary size: an interactive account of bilingual lexical acquisition"
-bibliography: "../assets/references.bib"
-csl: "../assets/apa7.csl"
+bibliography: "assets/references.bib"
+csl: "assets/apa7.csl"
 format:
   docx: 
-    reference-doc: ../assets/template.docx
+    reference-doc: assets/template.docx
 warning: false
 echo: false
 fig-dpi: 2000
