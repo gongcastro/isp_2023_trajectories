@@ -87,33 +87,17 @@ options(ggplot2.ordinal.fill = clrs,
 
 <br>
 
-::: columns
+- Word learning is **challenging**: variability, ambiguity, etc.
 
-:::: {.column width="70%"}
+- Earliest evidence of word acquisition: **6 months** of age 
 
-- Word learning is challenging: variability, ambiguity, etc.
+- **Bilingual word acquisition** is more complex: more than one word-form per referent (*gos* &rarr; DOG &larr; *perro*)
 
-- Earliest evidence of word acquisition: **6 months** of age [@jusczyk1995infants; @bergelson2012months]
+- Do bilinguals fall behind? **mixed evidence** on across language pairs: English-French, Catalan-Spanish, etc.
 
-
-::: info-box
-<p style="text-align:center">*gos* &rarr; DOG &larr; *perro*</p>
+::: {.aside}
+@jusczyk1995infants, @bergelson2012months, @hoff2012dual
 :::
-
-::::
-
-:::: {.column width="30%"}
-
-![Medical Xpress](images/bergelson-swingley.jpg)
-
-::::
-
-:::
-
-**Bilingual word acquisition**: more than one word-form per referent
-
-Bilinguals do not fall behind [e.g., @hoff2012dual]. **Mixed evidence** on across language pairs: English-French, Catalan-Spanish, etc.
-
 
 ::: {.notes}
 * Leaning words is important, but it's a hard task: ambiguity, variability
@@ -125,7 +109,7 @@ Bilinguals do not fall behind [e.g., @hoff2012dual]. **Mixed evidence** on acros
 
 <br>
 
-Bilingual toddlers learning two languages that share more **cognates** show larger vocabulary sizes [@floccia2018introduction]
+Bilingual toddlers learning two languages that share more **cognates** show larger vocabulary sizes
 
 ::: goal
 
@@ -150,28 +134,32 @@ Bilingual toddlers learning two languages that share more **cognates** show larg
 
 :::
 
-Cognates are acquired earlier than non-cognates [@mitchell2022cognates; @bosch2014first]
+Cognates are acquired earlier than non-cognates
 
-Bilinguals acquire **TEs** from early steps of vocabulary growth [@bilson2015semantic; @tsui2022are]
+Bilinguals acquire **TEs** from early steps of vocabulary growth
 
 Why would cognates be acquired earlier?
 
+::: .aside
+
+@floccia2018introduction, @mitchell2022cognates, @bosch2014first, @bilson2015semantic, @tsui2022are
+
+:::
+
 ::: {.notes}
-* One factor: linguistic or typological distance
-* Linguistically more similar languages share more cognates
-* Cognates are form-similar translation equivalents
-* Children acquire TEs early on: whether cognateness impacts vocabulary growth or not makes a great impact
-* Cognates are acquired at earlier ages,. May explain the facilitation of linguistic distance
-* But why would cognates be acquired earlier?
+- One factor: linguistic or typological distance
+- Linguistically more similar languages share more cognates
+- Cognates are form-similar translation equivalents
+- Children acquire TEs early on: whether cognateness impacts vocabulary growth or not makes a great impact
+- Cognates are acquired at earlier ages,. May explain the facilitation of linguistic distance
+- But why would cognates be acquired earlier?
 :::
 
 ## Parallel activation: candidate mechanism?
 
-Lexical access is **language non-selective**:
-
-Translation equivalents are co-activated, even in monolingual situations [e.g., @costa2000cognate]
-
-**Dissociation** between models of bilingual word *processing* and *word acquisition*
+- Lexical access is **language non-selective**: both languages are co-activated (even in monolingual situations)
+- Cross-language activation across translation equivalents
+- **Dissociation** between models of bilingual word *processing* and *word acquisition*
 
 ```{r parallel}
 #| label: parallel
@@ -179,9 +167,9 @@ Translation equivalents are co-activated, even in monolingual situations [e.g., 
 #| warning: false
 #| fig-width: 5
 #| fig-align: center
-#| fig-height: 2
-#| out-height: 30%
-#| out-width: 50%
+#| fig-height: 1.70
+#| out-height: 10%
+#| out-width: 40%
 tibble(x = c(-1, 1),
        y = c(0, 0),
        word = c("gat", "gato"),
@@ -201,17 +189,12 @@ tibble(x = c(-1, 1),
              size = 2) +
     geom_point(size = 50,
                shape = 21,
-               stroke = 3,
-               alpha = 2/4) +
-    geom_point(size = 50,
-               shape = 21,
                fill = NA,
                stroke = 3) +
     geom_text(colour = "black",
               size = 6) +
     geom_text(aes(y = 0.75,
                   label = language),
-              colour = "white",
               size = 6) +
     annotate(geom = "text",
              label = "Phonology",
@@ -228,23 +211,26 @@ tibble(x = c(-1, 1),
     theme(legend.position = "none")
 ```
 
+::: .aside
+@spivey1999cross, @costa2000cognate
+:::
 
 ::: notes
-* We can try to explain this from the language non-selective hypothesis of lexical access
-* States that bilinguals activate both languages even in monolingual situations
+- We can try to explain this from the language non-selective hypothesis of lexical access
+- States that bilinguals activate both languages even in monolingual situations
 * The activation of a word in the lexicon may lead to the activation of its translation
-* Cognates provide evidence of this
-* To data, the cognate facilitation has been embedded in models of word comprehension and production, but not acquisition
-* In this study, we provide a theoretical framework for the cognate facilitation on word acquisition, capitalising on accumulator models of language acquisition
+- Cognates provide evidence of this
+- To data, the cognate facilitation has been embedded in models of word comprehension and production, but not acquisition
+- In this study, we provide a theoretical framework for the cognate facilitation on word acquisition, capitalising on accumulator models of language acquisition
 :::
 
 ## Accumulator models
 
 <br>
 
-Word acquisition as a **continuous process** of **lexical consolidation** [@hidaka2013computational; @mollica2017how]
+Word acquisition as a **continuous process** of **lexical consolidation**: accumulation of word **learning instances**
 
-![](images/accumulator-diagram.png){width="90%" fig-align=center}
+![](images/accumulator-diagram.png){width="100%" fig-align=center}
 
 ::: notes
 * Accumulator models devise word acquisition as a continuous process 
@@ -255,10 +241,19 @@ Word acquisition as a **continuous process** of **lexical consolidation** [@hida
 * We are aware that word learning involves more than association. We assume it involves, at least, association
 :::
 
+::: .aside
+@hidaka2013computational, @mollica2017how
+:::
 
-# Simulations: monolingual word acquisition {background-color="#003f5c"}
+# Simulating word acquisition {background-color="#003f5c"}
 
----
+# {background-color="#003f5c"}
+
+<div class="highlight">
+Simulation 1: **Monolinguals**
+</div>
+
+## {transition="none"}
 
 ::: columns
 
@@ -276,6 +271,8 @@ $$
 \end{aligned}
 $$
 
+:::::
+
 ```{r poisson}
 #| label: poisson
 #| out-width: 120%
@@ -285,7 +282,7 @@ $$
 data.frame(lambda = 50) %>%
     ggplot(aes(xdist = dist_poisson(lambda))) +
     stat_histinterval(point_interval = NULL,
-                      slab_colour = "#f5f5f5",
+                      slab_colour = "white",
                       outline_bars = TRUE,
                       fill = "grey50") +
     coord_cartesian(expand = FALSE) +
@@ -294,14 +291,8 @@ data.frame(lambda = 50) %>%
          y = NULL) +
     scale_x_continuous(breaks = seq(0, 100, 10)) +
     theme_ggdist() +
-    theme(axis.text.y = element_blank(),
-          plot.background = element_rect(fill = "#f5f5f5",
-                                         colour = NA),
-          panel.background = element_rect(fill = "#f5f5f5",
-                                          colour = NA))
+    theme(axis.text.y = element_blank())
 ```
-
-:::::
 
 ::::
 
@@ -377,7 +368,7 @@ eli_df |>
 :::
 
 
----
+## {transition="none"}
 
 ::: columns
 
@@ -460,12 +451,9 @@ eli_df |>
 
 :::
 
-::: notes
-* Threshold: theoretical number of cumulative learning instances at which the lexical representation is consolidated
-* Set at 300 for simulation purposes
-:::
 
----
+
+## {transition="none"}
 
 ::: columns
 
@@ -576,7 +564,8 @@ eli_df |>
 * At this age, lexical representation is consolidated and this is observed in learning outputs
 :::
 
----
+
+## {transition="none"}
 
 ::: columns
 
@@ -606,17 +595,18 @@ $$
 
 <br>
 
-```{r eli-mon-2-rep}
-#| label: eli-mon-2-rep
+```{r eli-mon-2}
+#| label: eli-mon-3-rep
 #| fig-width: 3
 #| fig-height: 3
 #| out-width: 90%
 #| fig-align: center
-threshold <- 300
+threshold <- 300 
 
-eli_df <- map(
+eli_df_rep <- map_df(
     1:50,
-    function(i) {
+    function(x) {
+        # no parallel activation
         generate_eli(
             threshold = threshold,
             age = seq(1, 50, length.out = 100),
@@ -633,24 +623,21 @@ eli_df <- map(
                    language=="L1", 
                    grepl("gat", item)) |> 
             mutate(language = ifelse(language=="L1", "Catalan form", "Spanish form"))
-    })
+    },
+    .id = "iteration")
 
-aoa_df <- map_df(
-    eli_df,
-    function(x) {
-        generate_aoa(x, threshold = 300) |>
-            mutate(across(aoa, lst(min, max)), .by = c(te, language)) |>
-            filter(hypothesis=="H0")
-    }, .id = "iteration")
 
 eli_df |>
-    bind_rows(.id = "iteration") |> 
     ggplot(aes(age, eli,
                colour = language)) +
     facet_wrap(~ te) +
+    geom_line(data = eli_df_rep,
+              aes(group = interaction(iteration, language)),
+              alpha = 1/5) +
     geom_hline(yintercept = threshold,
                linewidth = 3/4,
-               colour = "grey80") +
+               colour = "grey80",
+               na.rm = TRUE) +
     annotate(geom = "label",
              label = glue::glue("Threshold: {threshold}"),
              label.r = unit(0, "lines"),
@@ -660,10 +647,25 @@ eli_df |>
              y = threshold,
              size = 2,
              hjust = 0) +
-    geom_line(aes(group = iteration),
-              linewidth = 3/4,
-              alpha = 1/3,
-              na.rm = TRUE) +
+    geom_segment(data = aoa_df,
+                 aes(x = aoa,
+                     xend = aoa,
+                     y = 0,
+                     yend = threshold),
+                 linewidth = 3/4) +
+    geom_line(linewidth = 1) +
+    geom_label(data = aoa_df,
+               aes(x = aoa,
+                   y = threshold,
+                   label = round(aoa, 2),
+                   fill = language),
+               size = 3,
+               label.r = unit(0, "lines"),
+               label.size = 0,
+               colour = "white",
+               na.rm = TRUE,
+               show.legend = FALSE
+    ) +
     labs(x = "Age (months)",
          y = "Cumulative learning instances",
          colour = "",
@@ -694,18 +696,15 @@ eli_df |>
 
 :::
 
-::: notes
-* Finally, age of acquisition is the age at which learning instances meet the threshold
-* At this age, lexical representation is consolidated and this is observed in learning outputs
-:::
+# {background-color="#003f5c"}
 
-# Simulations: bilingual word acquisition {background-color="#003f5c"}
+<div class="highlight">
+Simulation 2: **Bilinguals**
 
-H0: no parallel activation
+(H0: No parallel activation)
+</div>
 
-H1: parallel activation
-
-## H0: no parallel activation {.smaller}
+## {transition="none"}
 
 |                  | Catalan | Spanish |
 |:-----------------|:-------:|:-------:|
@@ -787,7 +786,118 @@ eli_df |>
     scale_y_continuous(labels = function(x) format(x, big.mark = ","),
                        limits = c(0, 1500)) +
     theme_ggdist() +
-    theme(legend.position = c(0.5, 0.8), 
+    theme(legend.position = c(0.75, 0.8), 
+          legend.background = element_rect(fill = NA, colour = NA),
+          legend.text = element_text(size = 10),
+          legend.key.width = unit(2, "cm"),
+          legend.key.height = unit(0.5, "cm"),
+          strip.background = element_rect(fill = "grey90", colour = "grey90"),
+          strip.text = ggtext::element_markdown(size = 10),
+          panel.grid.major.y = element_line(colour = "grey",
+                                            linetype = "dotted"),
+          plot.background = element_rect(fill = "white",
+                                         colour = NA))
+```
+
+::: notes
+* In the case of bilinguals, we need to consider the dual language exposure
+* Bilinguals are exposed to quantitatively less linguistic input in each language
+* Will accumulate learning instances more slowly than monolingual
+* Here's an example
+* Because the child is exposed most of the time to Catalan, they will accumulate learning instances in Catalan faster than in Spanish
+* We can see how the child accumulates learning instances for two translation pairs: gat-gato and gos-perro
+* The child acquires the Catalan forms earlier than the Spanish forms
+:::
+
+## {transition="none"}
+
+|                  | Catalan | Spanish |
+|:-----------------|:-------:|:-------:|
+|Language exposure | 60%     | 40%     |
+
+
+```{r eli}
+#| label: eli-bil-h0-rep
+#| fig-width: 7
+#| fig-height: 3.25
+#| out-width: 150%
+#| out-height: 100%
+#| fig-align: center
+threshold <- 300 
+
+eli_df_rep <- map_df(
+    1:50,
+    function(x) {
+        generate_eli(
+    threshold = threshold,
+    age = seq(1, 50, length.out = 100),
+    freq_month = 50,
+    freq_beta = 1,
+    l1_doe = 0.6,
+    parallel_beta = 0,
+    conditions = c(
+        glue::glue("**Cognate**<br>/<i style='color:{clrs[1]}'>ˈgat</i>-<i style='color:{clrs[4]}'>ˈga.to</i>/ [cat]"),
+        glue::glue("**Non-cognate**<br>/<i style='color:{clrs[1]}'>ˈgos</i>-<i style='color:{clrs[4]}'>ˈpe.ro</i>/ [dog]")
+    )
+) |>
+    filter(hypothesis=="H1") |> 
+    mutate(language = ifelse(language=="L1", "Catalan form", "Spanish form"))
+    },
+    .id = "iteration")
+
+eli_df |>
+    ggplot(aes(age, eli,
+               colour = language)) +
+    facet_grid(~ te) +
+    geom_segment(data = aoa_df,
+                 aes(x = aoa,
+                     xend = aoa,
+                     y = 0,
+                     yend = threshold),
+                 linewidth = 3/4) +
+    geom_line(data = eli_df_rep,
+              aes(group = interaction(iteration, language)),
+              alpha = 1/5) +
+    geom_hline(yintercept = threshold,
+               linewidth = 3/4,
+               colour = "grey80") +
+    annotate(geom = "label",
+             label = glue::glue("Threshold: {threshold}"),
+             label.r = unit(0, "lines"),
+             label.size = 0,
+             fill = "grey80",
+             x = 0,
+             y = threshold,
+             size = 2,
+             hjust = 0) +
+    geom_line(linewidth = 1) +
+    geom_label(data = aoa_df,
+               aes(x = aoa,
+                   y = threshold,
+                   label = round(aoa, 2),
+                   fill = language),
+               size = 3,
+               label.r = unit(0, "lines"),
+               label.size = 0,
+               colour = "white",
+               na.rm = TRUE,
+               show.legend = FALSE
+    ) +
+    labs(x = "Age (months)",
+         y = "Cumulative\nlearning instances",
+         colour = "",
+         shape = "Hypothesis",
+         fill = "",
+         linetype = "Hypothesis") +
+    guides(colour = guide_legend(override.aes = list(linewidth = 2))) +
+    scale_colour_manual(values = clrs[c(1, 4)]) +
+    scale_fill_manual(values = clrs[c(1, 4)]) +
+    scale_x_continuous(labels = function(x) format(x, big.mark = ","),
+                       limits = c(0, 50)) +
+    scale_y_continuous(labels = function(x) format(x, big.mark = ","),
+                       limits = c(0, 1500)) +
+    theme_ggdist() +
+    theme(legend.position = c(0.75, 0.8), 
           legend.background = element_rect(fill = NA, colour = NA),
           legend.text = element_text(size = 10),
           legend.key.width = unit(2, "cm"),
@@ -812,43 +922,49 @@ eli_df |>
 :::
 
 
-## H1: parallel activation
+# {background-color="#003f5c"}
 
-**Hypothesis**: word-representations receive learning instances from their translations
+<div class="highlight">
+Simulation 3: **Bilinguals**
 
-Increment in learning instances: proportional to form-similarity (**cognateness**)
+(H1: Parallel activation)
+</div>
 
-::: goal 
+## {transition="none"}
 
-:::: columns
+<br>
 
-::::: {.column width="50%"}
+**Parallel activation hypothesis**
+: Word-representations receive learning instances from their translations. This increment in learning instances is proportional to form-similarity (**cognateness**).
+
+::: columns
+
+:::: {.column width="50%"}
 
 **Cognate**
 
 ![](images/diagram_cat.png)
 
-:::::
+::::
 
-::::: {.column width="50%"}
+:::: {.column width="50%"}
 
 **Non-cognate**
 
 ![](images/diagram_dog.png)
 
-:::::
-
 ::::
 
 :::
 
-## H1: parallel activation
 
-Including learning instances from **parallel activation**
+---
 
-**Hypothesis**: word-representations receive learning instances from their translations
+Including learning instances from **parallel activation**:
 
-Proportional to the amount of form-similarity (**cognateness**)
+* **Hypothesis**: word-representations receive learning instances from their translations
+
+* Proportional to the amount of form-similarity (**cognateness**)
 
 
 ::: goal
@@ -875,7 +991,7 @@ $$
 :::
 
 
-## H1: parallel activation  {.smaller}
+## {transition="none"}
 
 |                  | Catalan | Spanish |
 |:-----------------|:-------:|:-------:|
@@ -959,7 +1075,7 @@ eli_df |>
     scale_y_continuous(labels = function(x) format(x, big.mark = ","),
                        limits = c(0, 1500)) +
     theme_ggdist() +
-    theme(legend.position = c(0.5, 0.8), 
+    theme(legend.position = c(0.75, 0.8), 
           legend.background = element_rect(fill = NA, colour = NA),
           legend.text = element_text(size = 10),
           legend.key.width = unit(2, "cm"),
@@ -972,7 +1088,112 @@ eli_df |>
                                          colour = NA))
 ```
 
-# Testing predictions (observed data){background-color="#003f5c"}
+## {transition="none"}
+
+|                  | Catalan | Spanish |
+|:-----------------|:-------:|:-------:|
+|Language exposure | 60%     | 40%     |
+
+
+```{r eli}
+#| label: eli-bil-h1-rep
+#| fig-width: 7
+#| fig-height: 3.25
+#| out-width: 150%
+#| out-height: 100%
+#| fig-align: center
+threshold <- 300 
+
+eli_df_rep <- map_df(
+    1:50,
+    function(x) {
+        generate_eli(
+    threshold = threshold,
+    age = seq(1, 50, length.out = 100),
+    freq_month = 50,
+    freq_beta = 1,
+    l1_doe = 0.6,
+    parallel_beta = 1,
+    conditions = c(
+        glue::glue("**Cognate**<br>/<i style='color:{clrs[1]}'>ˈgat</i>-<i style='color:{clrs[4]}'>ˈga.to</i>/ [cat]"),
+        glue::glue("**Non-cognate**<br>/<i style='color:{clrs[1]}'>ˈgos</i>-<i style='color:{clrs[4]}'>ˈpe.ro</i>/ [dog]")
+    )
+) |>
+    filter(hypothesis=="H1") |> 
+    mutate(language = ifelse(language=="L1", "Catalan form", "Spanish form"))
+    },
+    .id = "iteration")
+
+eli_df |>
+    ggplot(aes(age, eli,
+               colour = language)) +
+    facet_grid(~ te) +
+    geom_segment(data = aoa_df,
+                 aes(x = aoa,
+                     xend = aoa,
+                     y = 0,
+                     yend = threshold),
+                 linewidth = 3/4) +
+    geom_line(data = eli_df_rep,
+              aes(group = interaction(iteration, language)),
+              alpha = 1/5) +
+    geom_hline(yintercept = threshold,
+               linewidth = 3/4,
+               colour = "grey80") +
+    annotate(geom = "label",
+             label = glue::glue("Threshold: {threshold}"),
+             label.r = unit(0, "lines"),
+             label.size = 0,
+             fill = "grey80",
+             x = 0,
+             y = threshold,
+             size = 2,
+             hjust = 0) +
+    geom_line(linewidth = 1) +
+    geom_label(data = aoa_df,
+               aes(x = aoa,
+                   y = threshold,
+                   label = round(aoa, 2),
+                   fill = language),
+               size = 3,
+               label.r = unit(0, "lines"),
+               label.size = 0,
+               colour = "white",
+               na.rm = TRUE,
+               show.legend = FALSE
+    ) +
+    labs(x = "Age (months)",
+         y = "Cumulative\nlearning instances",
+         colour = "",
+         shape = "Hypothesis",
+         fill = "",
+         linetype = "Hypothesis") +
+    guides(colour = guide_legend(override.aes = list(linewidth = 2))) +
+    scale_colour_manual(values = clrs[c(1, 4)]) +
+    scale_fill_manual(values = clrs[c(1, 4)]) +
+    scale_x_continuous(labels = function(x) format(x, big.mark = ","),
+                       limits = c(0, 50)) +
+    scale_y_continuous(labels = function(x) format(x, big.mark = ","),
+                       limits = c(0, 1500)) +
+    theme_ggdist() +
+    theme(legend.position = c(0.75, 0.8), 
+          legend.background = element_rect(fill = NA, colour = NA),
+          legend.text = element_text(size = 10),
+          legend.key.width = unit(2, "cm"),
+          legend.key.height = unit(0.5, "cm"),
+          strip.background = element_rect(fill = "grey90", colour = "grey90"),
+          strip.text = ggtext::element_markdown(size = 10),
+          panel.grid.major.y = element_line(colour = "grey",
+                                            linetype = "dotted"),
+          plot.background = element_rect(fill = "white",
+                                         colour = NA))
+```
+
+# Testing hypotheses {background-color="#ffa600"}
+
+<div class="highlight">
+Data collection
+</div>
 
 ## Questionnaire
 
@@ -982,19 +1203,15 @@ eli_df |>
 
 :::: {.column width="75%"}
 
-
-
-- On-line [@arslan2020formr]
-- Inspired in CDI [@fenson1994variability]
-- ~1,600 items/words (800 Catalan, 800 Spanish)
-- Sub-lists of 500 items (250 Catalan / 250 Spanish)
-- Short-listed `r length(unique(items$te))` noun translation pairs
+- On-line, inspired by CDI
+- 1,600 words: 800 Catalan and 800 Spanish (sub-lists of 500 words)
+- Short-listed `r length(unique(items$te))` (noun) translation pairs
 
 ::::
 
 :::: {.column width="25%"}
 
-<a href="https://gongcastro.github.io/bvq"><img src="images/logo.png" align="center" height="250" fig-align="center"/></a>
+<a href="https://gongcastro.github.io/bvq"><img src="images/logo.png" align="center" height="125" fig-align="center"/></a>
 
 ::::
 
@@ -1006,7 +1223,9 @@ eli_df |>
 |table | [ &nbsp;  ]    | [ &nbsp;  ]           |
 | ...  | [ &nbsp;  ]    | [ x ]                 |
 
-
+::: .aside
+@fenson1994variability
+:::
 ## Participants
 
 ```{r longitudinal}
@@ -1083,9 +1302,13 @@ participants %>%
     plot_layout(ncol = 2, widths = c(0.55, 0.45))
 ```
 
-## Data analysis
+# Testing hypotheses {background-color="#ffa600"}
 
-### Model structure
+<div class="highlight">
+Modelling and statistical inference
+</div>
+
+## Model
 
 <br>
 
@@ -1097,28 +1320,25 @@ participants %>%
 
 - *Participant* and *Translation equivalent* as grouping variables
 
-**Bayesian**: probability of parameter values
+**Bayesian** (`brms`/Stan): probability of parameter values
 
 $$P(\text{model} | \text{data}) \propto P(\text{data} | \text{model}) \times P(\text{model})$$
 
 
 ---
 
-### Predictors
+## Predictors
 
+<br>
 
-| Predictor | Example           |
-|:----------|:------------------|
-|Age        | Months            |
-|Length     |Number of phonemes |
-|Exposure   | Lexical frequency $\times$ Language exposure |
-|Cognateness|Levenshtein similarity between a word-form and its translation|
+- **Age**
+- **Length**: number of phonemes
+- **Exposure**: lexical frequency $\times$ language exposure
+- **Cognateness**: Levenshtein similarity between a word-form and its translation
 
-Two-way and three-way interactions between age, exposure, and cognateness
+Two-way and three-way **interactions** between age, exposure, and cognateness
 
-# Results {background-color="#bc5090"}
-
-## Posterior distribution
+---
 
 ```{r regression-coefs}
 #| fig-width: 10
@@ -1140,12 +1360,12 @@ post_summary |>
         html_font = "DM+Sans") |> 
     row_spec(9, background = clrs[5],
              hline_after = FALSE) |> 
-    row_spec(1:10, font_size = 27) |> 
+    row_spec(1:10, font_size = 26) |> 
     pack_rows("Intercepts", 1, 2)  |> 
     pack_rows("Slopes", 3, 10) 
 ```
 
-## Posterior predictions
+## {transition="none"}
 
 ```{r predictions}
 #| label: predictions-high
@@ -1221,9 +1441,8 @@ post_epreds |>
                                       linewidth = 0.75))
 ```
 
----
+## {transition="none"}
 
-## Posterior predictions
 
 ```{r predictions}
 #| label: predictions-mean
@@ -1299,7 +1518,7 @@ post_epreds |>
                                       linewidth = 0.75))
 ```
 
-## Posterior predictions
+## {transition="none"}
 
 ```{r predictions}
 #| label: predictions-low
@@ -1365,38 +1584,37 @@ post_epreds |>
                                       linewidth = 0.75))
 ```
 
-# Discussion {background-color="#ff6361"}
+# Discussion {background-color="#ffa600"}
 
 ::: {.incremental}
 
 * **Cognateness facilitates word acquisition**
 * Only **low-exposure** words benefit from their cognate status: less dominant language receives more facilitation
 * **Parallel activation** as mechanism that boosts lexical consolidation: increment in **cumulative learning instances**
-* Catalan-Spanish: very specific population
 * Next steps: word-learning, formalisation
 
 :::
 
----
-::: {.r-fit-text}
+## {background-color="#bc5090"}
+::: {.thanks}
 Thanks!
 :::
 
-![](images/sap.jpg)
+![](images/sap.jpg){.absolute left=0 width="800px"}
 
-![](images/ministerio.png){ width="100px"}
+![](images/ministerio.png){.absolute bottom=0 left=10 width="200px"}
 
-![](images/icrea.png){width="100px"}
+![](images/icrea.png){.absolute bottom=0 left=220 width="200px"}
 
-![](images/nacho.jpg){width="150px"}
+![](images/daniela.jpeg){.absolute width="225px" top=50 right=0}
 
-![](images/daniela.jpeg){width="150px"}
+![](images/nacho.jpg){.absolute width="225px" top=300 right=0}
 
+<div position="absolute" bottom=25 left=0>+ participants and families</div>
 
+# Appendix
 
-## Appendix
-
-### Item properties
+## Item properties
 
 ```{r items}
 #| label: items
@@ -1447,7 +1665,7 @@ items |>
           axis.text.y = element_blank())
 ```
 
-### Levenshtein similarity
+## Levenshtein similarity
 
 **Levenshtein distance**: number of edits for two character strings to become identical
 
@@ -1456,7 +1674,7 @@ items |>
 | Catalan 	| *porta*      	| /ˈpɔɾ.tə/    	| `pɔɾtə`  	|
 | Spanish 	| *puerta*     	| /ˈpweɾ.ta/   	| `pweɾta` 	|
 
-### Levenshtein similarity
+## Levenshtein similarity
 
 $$
 1-\frac{lev(A, B)}{Max(length(A), length(B))}
@@ -1471,13 +1689,12 @@ $$
 | ...     	              | ...     	            | ... 	            |
 
 
-### Vocabulary 
+## Vocabulary 
 
 ```{r vocab-preds}
 #| label: vocab-preds
-#| fig-width: 3.5
-#| out-width: 100%
-#| out-height: 100%
+#| fig-width: 6
+#| out-width: 90%
 #| fig-height: 4
 vocab_data_tmp <- vocab_data |> 
     rename(Total = "total_count",
@@ -1488,7 +1705,7 @@ vocab_data_tmp <- vocab_data |>
 
 ggplot(vocab_preds, aes(age, .epred,
                         colour = lp, fill = lp)) +
-    facet_wrap(~.type, ncol = 1) +
+    facet_wrap(~.type) +
     geom_point(data = vocab_data_tmp,
                aes(y = .value),
                alpha = 1/5) +

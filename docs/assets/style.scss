@@ -34,6 +34,7 @@ $code-block-border-color: $lightgrey;
 // layout;
 $presentation-heading-line-height: 1;
 $h1-margin-bottom: 20%;
+$h1-font-size: 40px;
 
 /*-- scss:rules --*/
 
@@ -58,7 +59,7 @@ $h1-margin-bottom: 20%;
   }
   
   .quarto-title-author {
-    margin-right: 1em;
+    margin-right: 0.5em;
     padding-left: 0.5em;
     padding-right: 0.5em;
     color: $primary;
@@ -115,6 +116,19 @@ h2 {
 .citation {
     font-size: 20px;
     line-height: 25%;
+    color: grey;
+    text-align: right;
+    
+    a {
+        color: grey;
+        text-align: right;
+    }
+}
+
+.aside {
+    color: $lightgrey;
+    font-size: 15px;
+    text-align: right;
 }
 
 .callout {
@@ -143,6 +157,10 @@ aside p, .aside-footnotes {
   color: $body-color;
 }
 
+.blockquote {
+    font-size: 21px;
+}
+
 .reveal .slide .goal {
   margin-top: 1em;
   margin-bottom: 1em;
@@ -151,6 +169,20 @@ aside p, .aside-footnotes {
   padding-left: 1em;
   background: $lightgrey;
   font-size: 23px;
+}
+
+.highlight {
+    background-color: white;
+    color: black;
+    font-size: 55px;
+    opacity: 1;
+}
+
+.thanks {
+    p {
+        font-size: 100px;
+        font-weight: bold;
+    }
 }
 
 
