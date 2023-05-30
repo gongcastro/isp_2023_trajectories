@@ -87,13 +87,13 @@ options(ggplot2.ordinal.fill = clrs,
 
 <br>
 
-- Word learning is **challenging**: variability, ambiguity, etc.
+- Word learning is **challenging**: variability, ambiguity
 
 - Earliest evidence of word acquisition: **6 months** of age 
 
 - **Bilingual word acquisition** is more complex: more than one word-form per referent (*gos* &rarr; DOG &larr; *perro*)
 
-- Do bilinguals fall behind? **mixed evidence** on across language pairs: English-French, Catalan-Spanish, etc.
+- Do bilinguals fall behind? **Mixed evidence** across language pairs: English-French, Catalan-Spanish, etc.
 
 ::: {.aside}
 @jusczyk1995infants, @bergelson2012months, @hoff2012dual
@@ -124,9 +124,9 @@ Bilingual toddlers learning two languages that share more **cognates** show larg
 
 ::::: {.column width="50%"}
 
-| *Cognate*           | *Non-cognate*       |
-|:-------------------:|:-------------------:|
-| [cat] /ˈgat-ˈgato/  | [dog] /ˈgos-ˈpe.ro/ |
+| *Cognate*            | *Non-cognate*       |
+|:--------------------:|:-------------------:|
+| [cat] /ˈgat-ˈga.to/  | [dog] /ˈgos-ˈpe.ro/ |
 
 :::::
 
@@ -134,30 +134,24 @@ Bilingual toddlers learning two languages that share more **cognates** show larg
 
 :::
 
-Cognates are acquired earlier than non-cognates
-
-Bilinguals acquire **TEs** from early steps of vocabulary growth
-
-Why would cognates be acquired earlier?
+Cognates are acquired **earlier** than non-cognates. Why?
 
 ::: .aside
 
-@floccia2018introduction, @mitchell2022cognates, @bosch2014first, @bilson2015semantic, @tsui2022are
+@floccia2018introduction, @mitchell2022cognates, @bosch2014first, @bilson2015semantic
 
 :::
 
 ::: {.notes}
-- One factor: linguistic or typological distance
-- Linguistically more similar languages share more cognates
+- Bilinguals learning languages that share more cognates show larger vocabulary sizes
 - Cognates are form-similar translation equivalents
-- Children acquire TEs early on: whether cognateness impacts vocabulary growth or not makes a great impact
-- Cognates are acquired at earlier ages,. May explain the facilitation of linguistic distance
+- Cognates are acquired at earlier ages, may explain the facilitation of linguistic distance
 - But why would cognates be acquired earlier?
 :::
 
 ## Parallel activation: candidate mechanism?
 
-- Lexical access is **language non-selective**: both languages are co-activated (even in monolingual situations)
+- Lexical access is **language non-selective**: both languages are co-activated, even in monolingual situations
 - Cross-language activation across translation equivalents
 - **Dissociation** between models of bilingual word *processing* and *word acquisition*
 
@@ -216,11 +210,10 @@ tibble(x = c(-1, 1),
 :::
 
 ::: notes
-- We can try to explain this from the language non-selective hypothesis of lexical access
-- States that bilinguals activate both languages even in monolingual situations
-* The activation of a word in the lexicon may lead to the activation of its translation
-- Cognates provide evidence of this
-- To data, the cognate facilitation has been embedded in models of word comprehension and production, but not acquisition
+- Parallel activation refer to a phenomenon where bilinguals activate both languages even in monolingual situations
+- The activation of a word in the lexicon may lead to the activation of its translation
+- Cognates provide evidence of for the language-non selective hypothesis
+- To date, the cognate facilitation has been embedded in models of word comprehension and production, but not acquisition
 - In this study, we provide a theoretical framework for the cognate facilitation on word acquisition, capitalising on accumulator models of language acquisition
 :::
 
