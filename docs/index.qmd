@@ -240,6 +240,40 @@ Word acquisition as a **continuous process** of **lexical consolidation**: accum
 
 # Simulating bilingual word acquisition {background-color="#003f5c"}
 
+## {transition="none"}
+
+For participant **$i$** and word **$j$**:
+
+$$
+\begin{aligned}
+\text{Learning instances}_{ij} &= \text{Age}_i \cdot \text{Frequency}_j \\
+\text{Frequency}_j &\sim \text{Poisson}(\lambda) \\\\
+\textbf{For simulations:}~ \lambda &= 50
+\end{aligned}
+$$
+
+
+```{r poisson-1}
+#| label: poisson-1
+#| out-width: 80%
+#| fig-width: 4
+#| fig-height: 1.75
+data.frame(lambda = 50) %>%
+    ggplot(aes(xdist = dist_poisson(lambda))) +
+    stat_histinterval(point_interval = NULL,
+                      slab_colour = "white",
+                      outline_bars = TRUE,
+                      fill = "grey50") +
+    coord_cartesian(expand = FALSE) +
+    labs(title = "Frequency per month\n(Poisson distribution)",
+         x = "Learning instances per month",
+         y = NULL) +
+    scale_x_continuous(breaks = seq(0, 100, 10)) +
+    theme_ggdist() +
+    theme(axis.text.y = element_blank())
+```
+
+
 # {background-color="#003f5c"}
 
 <div class="highlight">
